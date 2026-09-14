@@ -46,8 +46,11 @@ Low polygon counts are not a style requirement. Texture treatment, pixelation an
 
 - [ ] Refactor input using Unity Input System actions and context-aware dispatch. Components consume actions; number keys must not select tools when another context owns input.
 - [ ] Improve school visibility and evaluate whether boid-based movement is useful.
+- [ ] Consider reducing texture scale for caustics on seabed, lets say by 30%
 - [ ] Explore day/night lighting and ambience.
 - [ ] Additional wildlife: giant squid, octopus and crabs.
 - [ ] Other biomes, including the abyssal zone. Consult the creator's books for inspiration.
+
+# Misc
 
 Project setup, authoring and verification instructions are in [AGENTS.md](AGENTS.md).
