@@ -1,0 +1,6 @@
+{
+    "name": "DeepSky.Editor",
+    "rootNamespace": "DeepSky",
+    "references": ["DeepSky", "Unity.RenderPipelines.Core.Runtime", "Unity.RenderPipelines.Universal.Runtime"],
+    "includePlatforms": ["Editor"]
+}

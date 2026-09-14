@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4cfaaae5cdc458ba7b1eda3c72bbbb, type: 3}
+  m_Name: DepthAtmosphere
+  m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.Atmosphere.DepthAtmosphereProfile
+  bands:
+  - depth: 100
+    upperWater: {r: 0.15, g: 0.53, b: 0.69, a: 1}
+    lowerWater: {r: 0.104, g: 0.384, b: 0.504, a: 1}
+    ambient: {r: 0.2, g: 0.4, b: 0.53, a: 1}
+    visibility: 50
+    caustics: 1
+    shaftOpacityLimit: 1
+  - depth: 200
+    upperWater: {r: 0.11, g: 0.35, b: 0.43, a: 1}
+    lowerWater: {r: 0.056, g: 0.21, b: 0.28, a: 1}
+    ambient: {r: 0.2, g: 0.4, b: 0.53, a: 1}
+    visibility: 45
+    caustics: 0.3
+    shaftOpacityLimit: 0
+  - depth: 300
+    upperWater: {r: 0.048, g: 0.18, b: 0.24, a: 1}
+    lowerWater: {r: 0.03, g: 0.1, b: 0.2, a: 1}
+    ambient: {r: 0.35, g: 0.35, b: 0.45, a: 1}
+    visibility: 35
+    caustics: 0
+    shaftOpacityLimit: 0
+  fogTransitionDistance: 40
+  minimumSceneContribution: 0.1
+  visibilityEdgeFade: 4
+  daylight: 1
+  minimumWaterDaylight: 0.5
+  cloudFill: {r: 0.5, g: 0.5, b: 0.5, a: 1}

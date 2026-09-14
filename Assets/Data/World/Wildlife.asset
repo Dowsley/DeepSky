@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ae58fd844464dcd9197e68674e3c88, type: 3}
+  m_Name: Wildlife
+  m_EditorClassIdentifier: DeepSky::DeepSky.Animals.Population.WildlifeProfile
+  checkInterval: 3
+  spawnRadius: 72
+  despawnRadius: 96
+  corpseLifetime: 120
+  initialPassingRadius: {x: 20, y: 38}
+  fish:
+  - {fileID: 49797316263783092, guid: 4dea7ffed855d48d1bdd91a25e136bdd, type: 3}
+  - {fileID: 6081482710815012703, guid: 2bfa23642556945a082a909cf43471ec, type: 3}
+  - {fileID: 179311425639898586, guid: dfab43eecfcf14d21b3441dc0d49407d, type: 3}
+  - {fileID: 150431168970591557, guid: 548b65e3c37e746a6b2738ee8447df47, type: 3}
+  schoolSize: 20
+  maximumSchools: 12
+  schoolRadius: 10
+  schoolSeparation: 40
+  fishClearance: {x: 3, y: 5.5}
+  fishScale: {x: 0.9, y: 1.1}
+  passing:
+  - prefab: {fileID: 2604910824430757592, guid: 14e16b14c8d5e4ac197afe6a3ec54b4c, type: 3}
+    chancePerCheck: 0.16
+    groupSize: 5
+    maximumAlive: 10
+    minimumAlive: 5
+    groupSpread: 21
+    headingVariation: 45
+    clearance: {x: 17.5, y: 32.5}
+    scale: {x: 0.9, y: 1.1}
+  - prefab: {fileID: 4648692841977459530, guid: c580b4a58faa44780a503b930e455934, type: 3}
+    chancePerCheck: 0.2
+    groupSize: 1
+    maximumAlive: 4
+    minimumAlive: 2
+    groupSpread: 0
+    headingVariation: 45
+    clearance: {x: 4, y: 12}
+    scale: {x: 0.9, y: 1.1}
+  - prefab: {fileID: 8779009384188816356, guid: 91e84a400ca1746d4bdeec23c1cfde05, type: 3}
+    chancePerCheck: 0.08
+    groupSize: 1
+    maximumAlive: 2
+    minimumAlive: 1
+    groupSpread: 0
+    headingVariation: 45
+    clearance: {x: 32, y: 38}
+    scale: {x: 0.9, y: 1.1}

@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 397891c88cb3341ecb36c44d7ef9ccee, type: 3}
+  m_Name: KelpForest
+  m_EditorClassIdentifier: DeepSky::DeepSky.World.Population.WorldContentProfile
+  populations:
+  - rid: 8427921804409962563
+  - rid: 8427921804409962564
+  - rid: 8427921804409962565
+  - rid: 8427921804409962566
+  - rid: 8427921804409962567
+  - rid: 8427921804409962568
+  - rid: 8427921804409962574
+  - rid: 8427921804409962575
+  - rid: 8427921804409962576
+  mineralSeparation: 6
+  references:
+    version: 2
+    RefIds:
+    - rid: 8427921804409962563
+      type: {class: PlantPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Seagrass
+        seedStream: 1
+        density: 0.075
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.67, y: 1.33}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 629331591733465560, guid: 364e5f80ec83d41b1acb0d712bd27e6c, type: 3}
+    - rid: 8427921804409962564
+      type: {class: PlantPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Seabed fronds
+        seedStream: 2
+        density: 0.075
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.67, y: 1.33}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 6326704880151590700, guid: 2b307d55119d64943a9a4bdd5762a232, type: 3}
+    - rid: 8427921804409962565
+      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Tall kelp
+        seedStream: 3
+        density: 0.01
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.75, y: 1.15}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 3366316423278139708, guid: 9818b581a1fb64f5c939fd9e2a8bbb14, type: 3}
+    - rid: 8427921804409962566
+      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Giant algae
+        seedStream: 4
+        density: 0.003
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.8, y: 1.15}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 9008114135332590748, guid: 8c1be1c45aab84ee6b28f76cf764336c, type: 3}
+    - rid: 8427921804409962567
+      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Seabed algae
+        seedStream: 5
+        density: 0.02
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.7, y: 1.25}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 7233040988236089136, guid: 15387533cb63f4bc69942d50aacf9ec5, type: 3}
+    - rid: 8427921804409962568
+      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Pebbles
+        seedStream: 6
+        density: 0.025
+        maximumSlope: 40
+        followVegetationPatches: 0
+        scaleMultiplier: {x: 0.6, y: 1.5}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 2477292910707721338, guid: c43b86b78cbc04c6c957a616c5a5e3e9, type: 3}
+    - rid: 8427921804409962574
+      type: {class: MineralPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Iron deposits
+        seedStream: 101
+        density: 0.0042
+        maximumSlope: 80
+        followVegetationPatches: 0
+        scaleMultiplier: {x: 0.85, y: 1.35}
+        seabedClearance: 0
+        rockWeightRange: {x: 0.65, y: 1}
+        alignToSurface: 1
+        prefab: {fileID: 1148959296509490597, guid: 31067a194dd8942f789f9c401be36e92, type: 3}
+    - rid: 8427921804409962575
+      type: {class: MineralPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Copper deposits
+        seedStream: 102
+        density: 0.0042
+        maximumSlope: 80
+        followVegetationPatches: 0
+        scaleMultiplier: {x: 0.85, y: 1.35}
+        seabedClearance: 0
+        rockWeightRange: {x: 0.65, y: 1}
+        alignToSurface: 1
+        prefab: {fileID: 4153576222498815794, guid: 6178c081f85004fc8b9ecd1c6e8d602d, type: 3}
+    - rid: 8427921804409962576
+      type: {class: MineralPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Coal deposits
+        seedStream: 103
+        density: 0.0006
+        maximumSlope: 40
+        followVegetationPatches: 0
+        scaleMultiplier: {x: 0.85, y: 1.25}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 0.25}
+        alignToSurface: 1
+        prefab: {fileID: 5098775116852410249, guid: 8e1872cd80a46494a95aed71eb922f9d, type: 3}

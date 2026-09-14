@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 197a5c4364d104d85b58e43a1fb654f2, type: 3}
+  m_Name: FieldHarpoon
+  m_EditorClassIdentifier: DeepSky::DeepSky.Equipment.ToolDefinition
+  displayName: Harpoon
+  kind: 1
+  viewPrefab: {fileID: 1979701252524676004, guid: 456f24a709f2343d082c69e765f19ecc, type: 3}
+  icon: {fileID: 21300000, guid: 7db278d03ce80438bbb4aaef4ad138b6, type: 3}
+  reach: 28
+  cooldown: 1.15
+  damage: 55
+  contactDelay: 0.14
+  projectilePrefab: {fileID: 3928607350520811679, guid: 5c4099d7651fe4d17aa1a419f6d3580b, type: 3}
+  projectileSpeed: 24

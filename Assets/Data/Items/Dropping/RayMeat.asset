@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c4498bf3111c411f9dd617fff0bf86b, type: 3}
+  m_Name: RayMeat
+  m_EditorClassIdentifier: DeepSky::DeepSky.Inventory.Dropping.WorldItemBehavior
+  prefab: {fileID: 2631561049007799691, guid: 5fdb5702465384ea481477864441db2d, type: 3}

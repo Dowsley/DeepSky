@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1956095bde25144b7af27096ddb0ff95, type: 3}
+  m_Name: WorldSettings
+  m_EditorClassIdentifier: DeepSky::DeepSky.World.Generation.WorldSettings
+  seed: 2404
+  chunksPerSide: 52
+  chunkSize: 32
+  subdivisions: 64
+  shelfDepths: {x: 100, y: 200, z: 300}
+  shelfRadii: {x: 0.2625, y: 0.15}
+  exteriorRadius: 0.375
+  exteriorDepth: 400
+  coastIrregularity: 180
+  boundaryWavelength: 180
+  cliffWidth: 32
+  rampWidth: 96
+  rampAngularWidth: 0.45
+  layoutCellSize: 12.8
+  terraceWavelength: 64
+  terraceDepth: 50
+  terraceSteps: 3
+  boundarySmoothingPasses: 3
+  duneWavelength: 30
+  duneHeight: 10
+  duneOctaves: 4
+  noisePersistence: 0.7
+  outcropWavelength: 12
+  outcropHeight: 45
+  outcropOctaves: 4
+  outcropThreshold: 0.3
+  outcropSoftCap: 22.5
+  outcropCompression: 20
+  rockSlope: {x: 22, y: 48}
+  spawnPosition: {x: -0.08, y: 0}
+  spawnBasinRadius: 38.4
+  spawnBasinTolerance: 0.5
+  spawnMaximumSlope: 20
+  spawnOutcropRadius: 25.6
+  spawnOutcropFade: 12.8
+  spawnClearingRadius: 6
