@@ -40,6 +40,12 @@ Click the Game view to capture the mouse. WASD walks and steers in the air. Spac
 
 Inventory lasts for the Play session; animal loot lasts while its body remains in the nearby wildlife population. Mining is inexhaustible and does not excavate terrain. Sharks retaliate and knock the diver back; player health, death, oxygen and objectives are not implemented.
 
+B toggles unlimited construction. See [building controls and contracts](Docs/Building.md)
+for floor expansion, windows, levels, openings, ladders and base placement. Bases
+last for the Play session and are independent of terrain chunks. Walking into a
+ladder climbs automatically, including while rising or falling. Moving away leaves
+it and gravity handles descent. Interior movement uses grounded jumping without buoyant boost.
+
 ## Assets
 
 Materials belong under `Assets/Materials`, including model materials in matching subfolders. Textures belong under `Assets/Textures`, grouped by purpose or model. These rules also apply to generated assets. `Assets/Data` holds world datasets and generated geometry. Preserve visual and movement behavior during structural refactors. Inspect dependencies before deleting content, and do not remove vegetation or other assets incidentally.

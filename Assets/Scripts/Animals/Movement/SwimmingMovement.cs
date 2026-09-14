@@ -22,6 +22,7 @@ namespace DeepSky.Animals.Movement
         private Vector3 travelHeading = Vector3.forward;
         private float floorClearance = 0f;
         private float cruiseSpeed = 0f;
+        private float bodyRadius = .25f;
 
         protected Vector3 TravelHeading => travelHeading;
         protected abstract float ModelYawOffset { get; }
@@ -47,6 +48,11 @@ namespace DeepSky.Animals.Movement
             }
             floorClearance = height >= 0f ? Mathf.Max(minimumClearance, height) : clearance;
             cruiseSpeed = speed >= 0f ? speed : swimSpeed;
+            foreach (Renderer visual in GetComponentsInChildren<Renderer>())
+            {
+                bodyRadius = Mathf.Max(bodyRadius, visual.bounds.extents.magnitude);
+            }
+            transform.position = SwimmingObstacle.Resolve(transform.position, bodyRadius);
             velocity = travelHeading * cruiseSpeed;
             FaceVelocity();
         }
@@ -57,6 +63,10 @@ namespace DeepSky.Animals.Movement
         protected bool CanSwimTo(Vector3 destination)
         {
             Vector3 start = transform.position;
+            if (SwimmingObstacle.Blocks(start, destination - start, bodyRadius, out _))
+            {
+                return false;
+            }
             int steps = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(start, destination) / 1.5f));
             for (int i = 1; i <= steps; i++)
             {
@@ -80,7 +90,7 @@ namespace DeepSky.Animals.Movement
             {
                 return;
             }
-            Vector3 position = transform.position;
+            Vector3 position = SwimmingObstacle.Resolve(transform.position, bodyRadius);
             Vector3 ahead = position + Vector3.ProjectOnPlane(direction, Vector3.up).normalized * lookAheadDistance;
             if (!world.Contains(new Vector2(ahead.x, ahead.z)))
             {
@@ -97,6 +107,19 @@ namespace DeepSky.Animals.Movement
                     desired.y = (targetHeight - position.y) * heightCorrectionRate;
                 }
             }
+            if (SwimmingObstacle.Blocks(position, desired.normalized * Mathf.Max(lookAheadDistance, speed * 2f), bodyRadius, out Vector3 normal))
+            {
+                Vector3 tangent = Vector3.Cross(Vector3.up, normal);
+                if (tangent.sqrMagnitude < .001f)
+                {
+                    tangent = travelHeading;
+                }
+                if (Vector3.Dot(tangent, desired) < 0f)
+                {
+                    tangent = -tangent;
+                }
+                desired = (tangent + normal * .65f).normalized * speed;
+            }
             velocity = Vector3.Lerp(velocity, desired.normalized * speed, 1f - Mathf.Exp(-delta / steeringResponseTime));
             Vector3 next = position + velocity * delta;
             if (world.TryGetHeight(next, out float floor))
@@ -104,6 +127,11 @@ namespace DeepSky.Animals.Movement
                 next.y = Mathf.Max(next.y, floor + minimumClearance);
             }
             next.y = Mathf.Min(next.y, -minimumClearance);
+            if (SwimmingObstacle.Blocks(position, next - position, bodyRadius, out Vector3 contact))
+            {
+                velocity = Vector3.ProjectOnPlane(velocity, contact);
+                next = position;
+            }
             transform.position = next;
             FaceVelocity();
         }

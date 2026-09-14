@@ -12,6 +12,8 @@ namespace DeepSky.Player
 
         public event Action<bool>? InventoryChanged;
         public bool InventoryOpen { get; private set; } = false;
+        public bool ConstructionActive { get; private set; } = false;
+        public bool ToolsActive => GameplayActive && !ConstructionActive;
 
         public bool GameplayActive => Application.isFocused && !InventoryOpen
                                                             && Cursor.lockState == CursorLockMode.Locked && Time.frameCount > captureFrame;
@@ -31,6 +33,10 @@ namespace DeepSky.Player
             }
             Keyboard? keyboard = Keyboard.current;
             Mouse? mouse = Mouse.current;
+            if (!InventoryOpen && keyboard != null && keyboard.bKey.wasPressedThisFrame)
+            {
+                ConstructionActive = !ConstructionActive;
+            }
             if (keyboard != null && keyboard.tabKey.wasPressedThisFrame)
             {
                 SetInventoryOpen(!InventoryOpen);
@@ -71,6 +77,10 @@ namespace DeepSky.Player
         public void SetInventoryOpen(bool open, bool captureOnClose = true)
         {
             InventoryOpen = open;
+            if (open)
+            {
+                ConstructionActive = false;
+            }
             if (open || !captureOnClose || !Application.isFocused)
             {
                 ReleaseCursor();

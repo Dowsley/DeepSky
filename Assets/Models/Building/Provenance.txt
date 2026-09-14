@@ -1,0 +1,13 @@
+Habitat module meshes
+
+Deck, WallPanel, WindowFrame, Ceiling, Ladder and Support are original geometry
+created for DeepSky. Their editable Blender source is retained locally in
+Art/Source/Habitat.blend, with the authoring script beside it.
+
+The materials reuse Assets/Textures/Equipment/FieldEquipmentAtlas.png, an original
+AI-generated texture made without supplied reference images. It is not a CC0
+download. This provenance does not establish exclusivity or copyright eligibility.
+The atlas's original generation record is retained locally in Art/FieldEquipment.md.
+
+Window-pane and entrance-water geometry, and their shaders, are original project
+work. Reference-game geometry and textures are not included in this kit.

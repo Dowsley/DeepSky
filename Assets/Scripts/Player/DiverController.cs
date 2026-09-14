@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 using DeepSky.World;
+using DeepSky.Building.Traversal;
 
 namespace DeepSky.Player
 {
@@ -20,6 +21,9 @@ namespace DeepSky.Player
         [SerializeField] private Light torch = null!;
         [SerializeField] private WorldManager world = null!;
         [SerializeField] private PlayerInputContext inputContext = null!;
+        [SerializeField] private HabitatTraversal? habitatTraversal;
+        [SerializeField, Min(0f)] private float indoorGravity = 18f;
+        [SerializeField, Min(0f)] private float indoorJumpSpeed = 5f;
 
         [Header("Look")]
         [Tooltip("Camera rotation in degrees per pixel of mouse movement.")]
@@ -117,7 +121,7 @@ namespace DeepSky.Player
         /// <summary>Draws optional movement instructions when the field interface is not open.</summary>
         private void OnGUI()
         {
-            if (!showControls || inputContext.InventoryOpen)
+            if (!showControls || inputContext.InventoryOpen || inputContext.ConstructionActive)
             {
                 return;
             }
@@ -127,7 +131,9 @@ namespace DeepSky.Player
             };
             controls.fontSize = controlsFontSize;
             string hint = !world.IsReady ? "Preparing seabed..." : Cursor.lockState == CursorLockMode.Locked
-                ? "WASD WALK / STEER    TAP SPACE JUMP / HOLD TO BOOST    F TORCH    ESC CURSOR"
+                ? habitatTraversal && habitatTraversal.IsDry
+                    ? "WASD WALK    SPACE JUMP    B BUILD    F TORCH    ESC CURSOR"
+                    : "WASD WALK / STEER    TAP SPACE JUMP / HOLD TO BOOST    B BUILD    F TORCH    ESC CURSOR"
                 : "Click to explore    WASD WALK / STEER    TAP SPACE JUMP / HOLD TO BOOST";
             Rect bounds = new Rect(0f, controlsTopMargin, Screen.width, controlsHeight);
             controls.normal.textColor = new Color(0f, 0f, 0f, controlsColor.a * .55f);
@@ -183,13 +189,15 @@ namespace DeepSky.Player
             {
                 float step = Mathf.Min(remaining, MaximumCollisionStep);
                 remaining -= step;
+                bool dry = habitatTraversal && habitatTraversal.IsDry;
+                float acceleration = dry ? indoorGravity : gravity;
                 if (jumpCooldown > 0)
                 {
                     jumpCooldown -= step;
                 }
-                else if (jump && boostCharges > 0 && view.transform.position.y <= 0f)
+                else if (jump && (dry ? grounded : boostCharges > 0 && view.transform.position.y <= 0f))
                 {
-                    verticalSpeed = Mathf.Max(verticalSpeed, grounded ? jumpSpeed : boostSpeed);
+                    verticalSpeed = Mathf.Max(verticalSpeed, dry ? indoorJumpSpeed : grounded ? jumpSpeed : boostSpeed);
                     jumpCooldown = grounded ? jumpRepeatDelay : boostRepeatDelay;
                     if (!grounded)
                     {
@@ -218,13 +226,17 @@ namespace DeepSky.Player
                 {
                     verticalSpeed = 0;
                 }
-                Vector3 motion = heading * ((grounded ? walkSpeed : airSpeed) * step);
+                Vector3 motion = heading * ((grounded || dry ? walkSpeed : airSpeed) * step);
                 float decay = Mathf.Exp(-impactDrag * step);
                 motion += impactVelocity * ((1f - decay) / impactDrag);
                 impactVelocity *= decay;
                 // Maintain contact down walkable slopes without carrying adhesion velocity into a fall.
-                motion.y = grounded ? -walkSpeed * step : verticalSpeed * step - 0.5f * gravity * step * step;
-                verticalSpeed -= gravity * step;
+                motion.y = grounded ? -walkSpeed * step : verticalSpeed * step - 0.5f * acceleration * step * step;
+                verticalSpeed -= acceleration * step;
+                if (habitatTraversal && habitatTraversal.ResolveLadderMotion(ref motion, step))
+                {
+                    verticalSpeed = 0f;
+                }
                 CollisionFlags collision = body.Move(motion);
                 grounded = (collision & CollisionFlags.Below) != 0;
                 if (grounded && verticalSpeed < 0)

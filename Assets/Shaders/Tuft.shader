@@ -18,12 +18,14 @@ Shader "DeepSky/Tuft"
             ZWrite Off
             Blend One OneMinusSrcAlpha
             HLSLPROGRAM
+            #pragma target 4.5
             #pragma vertex Vert
             #pragma fragment Frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Atmosphere.hlsl"
+            #include "Interior.hlsl"
+            #include "DiverLight.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
-            float4 _DiverLightPosition, _DiverLightDirection;
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST, _BaseColor;
                 float _WaveHeight, _WaveAmplitude, _WaveFactor;
@@ -57,14 +59,16 @@ Shader "DeepSky/Tuft"
             }
             half4 Frag(Varyings input):SV_Target
             {
+                if (PointInInterior(input.world))
+                {
+                    discard;
+                }
                 half4 textureColor=SAMPLE_TEXTURE2D(_BaseMap,sampler_BaseMap,input.uv);
                 float3 toEye=_WorldSpaceCameraPos-input.world;
                 float distanceToCamera=length(toEye);
                 float nearby=clamp(100/max(dot(toEye,toEye),.001),1,3);
                 float3 light=EnvironmentAmbient()*nearby;
-                float3 toLight=_DiverLightPosition.xyz-input.world;
-                float cone=smoothstep(.86,.96,dot(-normalize(toLight),_DiverLightDirection.xyz));
-                light+=cone*saturate(1-length(toLight)/18)*_DiverLightPosition.w;
+                light+=DiverTorch(input.world);
                 float3 albedo=ToDisplayColor(textureColor.rgb)*_BaseColor.rgb*input.tint;
                 float3 color=ApplyDistanceTint(albedo*light,distanceToCamera);
                 float fade=VisibilityFade(distanceToCamera);

@@ -38,11 +38,13 @@ Shader "DeepSky/Particle"
             ZWrite Off
             Cull Off
             HLSLPROGRAM
+            #pragma target 4.5
             #pragma vertex Vert
             #pragma fragment Frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.core/ShaderLibrary/Random.hlsl"
             #include "Atmosphere.hlsl"
+            #include "Interior.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseColor;
@@ -141,6 +143,10 @@ Shader "DeepSky/Particle"
             /// <returns>Premultiplied RGB and opacity after authored porosity, distance and depth fading.</returns>
             half4 Frag(V i):SV_Target
             {
+                if (PointInInterior(i.positionWS))
+                {
+                    discard;
+                }
                 half4 sample = SampleParticle(i.uv);
                 float alpha = sample.a*_BaseColor.a*i.color.a;
                 float3 relative = i.positionWS - GetCameraPositionWS();

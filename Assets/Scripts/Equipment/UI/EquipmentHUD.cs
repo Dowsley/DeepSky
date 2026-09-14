@@ -13,6 +13,7 @@ namespace DeepSky.Equipment.UI
         [SerializeField] private PlayerEquipment equipment = null!;
         [SerializeField] private PlayerInputContext input = null!;
         [SerializeField] private GameObject aiming = null!;
+        [SerializeField] private GameObject toolbelt = null!;
         [SerializeField] private ToolbeltSlotView[] slots = Array.Empty<ToolbeltSlotView>();
         [SerializeField] private Text hint = null!;
         [SerializeField] private Text message = null!;
@@ -23,6 +24,7 @@ namespace DeepSky.Equipment.UI
             Assert.IsNotNull(equipment, nameof(equipment));
             Assert.IsNotNull(input, nameof(input));
             Assert.IsNotNull(aiming, nameof(aiming));
+            Assert.IsNotNull(toolbelt, nameof(toolbelt));
             Assert.IsTrue(slots.Length >= equipment.Loadout.Count, "The toolbelt must fit the loadout.");
             for (int i = 0; i < slots.Length; i++)
             {
@@ -42,6 +44,7 @@ namespace DeepSky.Equipment.UI
         private void LateUpdate()
         {
             aiming.SetActive(!input.InventoryOpen);
+            toolbelt.SetActive(!input.ConstructionActive);
             for (int i = 0; i < slots.Length; i++)
             {
                 slots[i].SetSelected(i == equipment.SelectedIndex);

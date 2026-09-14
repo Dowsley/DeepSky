@@ -57,10 +57,13 @@ Shader "DeepSky/Surface"
             Offset [_DepthOffset], [_DepthOffset]
             Blend SrcAlpha OneMinusSrcAlpha
             HLSLPROGRAM
+            #pragma target 4.5
             #pragma vertex Vert
             #pragma fragment Frag
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Atmosphere.hlsl"
+            #include "Interior.hlsl"
+            #include "DiverLight.hlsl"
             #include "Floor.hlsl"
             #include "PlantWave.hlsl"
             TEXTURE2D(_BaseMap); SAMPLER(sampler_BaseMap);
@@ -71,7 +74,6 @@ Shader "DeepSky/Surface"
             TEXTURE2D(_RockNormal); SAMPLER(sampler_RockNormal);
             TEXTURE2D(_AlgaSandMap); SAMPLER(sampler_AlgaSandMap);
             TEXTURE2D(_RockHighlightMap); SAMPLER(sampler_RockHighlightMap);
-            float4 _DiverLightPosition, _DiverLightDirection;
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST, _BaseColor, _OverlayEmissionColor;
                 float4 _RockHighlightGrid, _FloorMapping, _CausticScroll;
@@ -124,6 +126,10 @@ Shader "DeepSky/Surface"
             /// <returns>Output-space color and coverage, discarding clipped or invisible fragments.</returns>
             half4 Frag(Varyings i):SV_Target
             {
+                if ((_RootedSway > .5 || _CardSway > 0 || _Sway > 0) && PointInInterior(i.world))
+                {
+                    discard;
+                }
                 float2 uv = _WorldUV > 0 ? i.world.xz * _WorldUV : i.uv;
                 if (_Floor > .5 && _SurfaceOverlay < .5)
                 {
@@ -186,9 +192,7 @@ Shader "DeepSky/Surface"
                 float3 c0 = ToDisplayColor(SAMPLE_TEXTURE2D(_Caustics,sampler_Caustics,causticUV + scroll).rgb);
                 float3 c1 = ToDisplayColor(SAMPLE_TEXTURE2D(_CausticsSecond,sampler_CausticsSecond,causticUV - scroll).rgb);
                 float3 caustic = (c0+c1)*_CausticStrength*EnvironmentCaustics()*(_Floor > .5 ? 1 : saturate(normal.y));
-                float3 toLight = _DiverLightPosition.xyz-i.world;
-                float cone = smoothstep(.86,.96,dot(-normalize(toLight),_DiverLightDirection.xyz));
-                float torch = cone*saturate(1-length(toLight)/18)*_DiverLightPosition.w;
+                float torch = DiverTorch(i.world);
                 float3 chunkHighlight=SAMPLE_TEXTURE2D_LOD(_RockHighlightMap,sampler_RockHighlightMap,
                     RockHighlightUV(i.world,_RockHighlightGrid),0).rgb;
                 float3 mineral=RockHighlight(chunkHighlight,tex.a,rockWeight);
@@ -205,13 +209,14 @@ Shader "DeepSky/Surface"
                 {
                     mineral += lerp(tex.rgb,float3(1,1,1),.5) * _OverlayEmissionColor.rgb * _Emission;
                 }
-                float3 col = ApplyDistanceTint(albedo * (light + torch) + caustic + mineral,distanceToCamera);
+                float waterDistance = WaterPathLength(i.world);
+                float3 col = ApplyDistanceTint(albedo * (light + torch) + caustic + mineral,waterDistance);
                 if (_SurfaceOverlay < .5)
                 {
                     col += albedo * _Emission;
                 }
                 col += (1-tex.a)*_AlphaEmission;
-                float fade = VisibilityFade(distanceToCamera);
+                float fade = VisibilityFade(waterDistance);
                 clip(fade - .00001);
                 float coverage = lerp(1,tex.a,_TextureAlpha);
                 if (_SurfaceOverlay > .5)

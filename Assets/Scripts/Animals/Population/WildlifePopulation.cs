@@ -215,6 +215,10 @@ namespace DeepSky.Animals.Population
                 return;
             }
             position.y = floor + clearance;
+            if (!Movement.SwimmingObstacle.IsClear(position, 2f * scale))
+            {
+                return;
+            }
             Animal animal = Instantiate(prefab, position, Quaternion.identity, parent);
             animal.transform.localScale = prefab.transform.localScale * scale;
             animal.Initialize(new AnimalSpawn(terrain, observer, heading, clearance, random.Next(), school));

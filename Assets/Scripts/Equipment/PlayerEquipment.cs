@@ -81,7 +81,8 @@ namespace DeepSky.Equipment
             effectTimer = Mathf.Max(0f, effectTimer - Time.deltaTime);
             messageTime = Mathf.Max(0f, messageTime - Time.unscaledDeltaTime);
             Hint = "";
-            if (!input.GameplayActive)
+            toolMount.gameObject.SetActive(!input.ConstructionActive);
+            if (!input.ToolsActive)
             {
                 knifeDelay = -1f;
                 drillView.SetDrilling(false);
