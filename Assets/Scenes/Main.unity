@@ -3677,6 +3677,7 @@ GameObject:
   - component: {fileID: 1431336846}
   - component: {fileID: 1431336847}
   - component: {fileID: 1431336848}
+  - component: {fileID: 1431336849}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -3886,6 +3887,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.CameraEffects.RetroPresentation
   material: {fileID: 2100000, guid: fc60b211368df49a0a0daf30a16548ff, type: 2}
+--- !u!114 &1431336849
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1431336839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc981bf71b12e40c391a3b9fe2e87ee4, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.CameraEffects.EntryWaterRendering
+  depthCopy: {fileID: 2100000, guid: f56e4e8f15d914740927d9cd51bf94d7, type: 2}
 --- !u!1 &1598400988
 GameObject:
   m_ObjectHideFlags: 0

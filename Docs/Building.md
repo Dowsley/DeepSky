@@ -37,6 +37,13 @@ excludes the dry section of each view ray, preserving underwater visibility thro
 windows. Bottom openings carry a fixed local waterline. Swimming animals avoid
 each base's bounding envelope, including gaps within an irregular footprint.
 
+Entrance water refracts the completed scene and uses depth-dependent absorption
+and screen-space reflections. Reflections fade to a subdued tint when geometry
+is off-screen. The player camera's Entry Water Rendering component captures
+scenery after underwater effects; the PC pipeline uses single-sample depth.
+Tune ripples, absorption and refraction on `Assets/Materials/Building/EntryWater.mat`.
+The shader's visual ripples do not move the gameplay waterline.
+
 The original kit uses textured metal and painted panels with point-sampled detail.
 [Asset provenance](../Assets/Models/Building/Provenance.txt) records its sources.
 Editable authoring work is retained in the ignored local Art directory.

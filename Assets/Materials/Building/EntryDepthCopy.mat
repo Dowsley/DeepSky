@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EntryWater
-  m_Shader: {fileID: 4800000, guid: 3e74b873808234919948cd1368e95e1b, type: 3}
+  m_Name: EntryDepthCopy
+  m_Shader: {fileID: 4800000, guid: c7c174b6ceaa74d3d80d32195ad26f59, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,17 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs: []
     m_Ints: []
-    m_Floats:
-    - _PixelDensity: 32
-    - _Reflection: 0.85
-    - _Refraction: 0.075
-    - _RippleContrast: 0.16
-    - _WaveHeight: 0.012
-    - _WaveLength: 1.1
-    - _WaveSpeed: 0.4
-    m_Colors:
-    - _Absorption: {r: 0.12, g: 0.045, b: 0.025, a: 0}
-    - _BaseColor: {r: 0.13, g: 0.32, b: 0.3, a: 1}
-    - _ReflectionTint: {r: 0.24, g: 0.29, b: 0.28, a: 1}
+    m_Floats: []
+    m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1
