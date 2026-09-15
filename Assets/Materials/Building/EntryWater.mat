@@ -25,6 +25,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _EdgeWidth: 0.14
     - _PixelDensity: 32
     - _Reflection: 0.85
     - _Refraction: 0.075
@@ -35,6 +36,8 @@ Material:
     m_Colors:
     - _Absorption: {r: 0.12, g: 0.045, b: 0.025, a: 0}
     - _BaseColor: {r: 0.13, g: 0.32, b: 0.3, a: 1}
+    - _CrestColor: {r: 0.76, g: 0.82, b: 0.7, a: 0.8}
     - _ReflectionTint: {r: 0.24, g: 0.29, b: 0.28, a: 1}
+    - _SurfaceColor: {r: 0.18, g: 0.43, b: 0.38, a: 0.3}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

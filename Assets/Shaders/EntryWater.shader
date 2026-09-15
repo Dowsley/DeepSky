@@ -12,6 +12,9 @@ Shader "DeepSky/Entry Water"
         _Absorption ("Light absorption per metre (RGB)", Vector) = (.12,.045,.025,0)
         _Reflection ("Reflection strength", Range(0,1)) = .85
         _ReflectionTint ("Off-screen reflection tint", Color) = (.24,.29,.28,1)
+        _SurfaceColor ("Uneven surface tint (RGB), strength (A)", Color) = (.18,.43,.38,.3)
+        _CrestColor ("Contact foam color (RGB), strength (A)", Color) = (.76,.82,.70,.8)
+        _EdgeWidth ("Contact edge width (metres)", Range(.01,.4)) = .14
     }
     SubShader
     {
@@ -29,9 +32,9 @@ Shader "DeepSky/Entry Water"
             #include "Atmosphere.hlsl"
             #include "Interior.hlsl"
             CBUFFER_START(UnityPerMaterial)
-            float4 _BaseColor, _Absorption, _ReflectionTint;
+            float4 _BaseColor, _Absorption, _ReflectionTint, _SurfaceColor, _CrestColor;
             float _WaveHeight, _WaveLength, _WaveSpeed, _RippleContrast, _PixelDensity;
-            float _Refraction, _Reflection;
+            float _Refraction, _Reflection, _EdgeWidth;
             CBUFFER_END
             struct A { float4 position:POSITION; };
             struct V { float4 position:SV_POSITION; float3 world:TEXCOORD0; float waterline:TEXCOORD1; };
@@ -79,7 +82,23 @@ Shader "DeepSky/Entry Water"
                 return normalize(float3(-slope.x,1,-slope.y));
             }
 
-            /// <summary>Combines refracted scenery, absorption and view-dependent reflections from either side.</summary>
+            /// <summary>Builds soft surface color patches and a narrow, uneven contact foam band.</summary>
+            /// <param name="world">Surface position in world metres.</param>
+            /// <param name="contactDistance">Distance in metres to the scene behind the unperturbed surface pixel.</param>
+            /// <returns>Uneven tint coverage in X and contact foam coverage in Y, each in [0, 1].</returns>
+            float2 SurfaceCoverage(float3 world, float contactDistance)
+            {
+                float density=max(_PixelDensity,1);
+                float2 p=(floor(world.xz*density)+.5)/density;
+                float time=_Time.y*_WaveSpeed;
+                float swell=Ripple(p);
+                float breakup=.5+.5*sin(p.x*2.7-p.y*3.1+sin(p.y*1.9+time*.31));
+                float width=_EdgeWidth*lerp(.45,1,breakup);
+                float edge=(1-smoothstep(0,width,contactDistance))*lerp(.3,1,breakup);
+                return float2(saturate(.3+swell*.35+breakup*.3),edge);
+            }
+
+            /// <summary>Combines refracted scenery, absorption, reflections, surface tint and contact foam from either side.</summary>
             /// <param name="i">Interpolated displaced surface position.</param>
             /// <returns>Composited scene color; atmospheric fade only reduces the surface contribution.</returns>
             half4 Frag(V i):SV_Target
@@ -119,6 +138,14 @@ Shader "DeepSky/Entry Water"
                 float3 reflection=lerp(fallback,reflected.rgb,reflected.a);
                 reflection=ApplyDistanceTint(reflection,WaterPathLength(i.world));
                 float3 color=lerp(refracted,reflection,saturate(fresnel*_Reflection));
+                float contactDistance=length(EntryScenePosition(uv)-i.world);
+                float2 coverage=SurfaceCoverage(i.world,contactDistance);
+                float surfaceStrength=above ? 1 : .5;
+                float waterPath=WaterPathLength(i.world);
+                float3 surfaceTint=ApplyDistanceTint(_SurfaceColor.rgb,waterPath);
+                float3 crestTint=ApplyDistanceTint(_CrestColor.rgb,waterPath);
+                color=lerp(color,surfaceTint,coverage.x*_SurfaceColor.a*surfaceStrength);
+                color=lerp(color,crestTint,coverage.y*_CrestColor.a*surfaceStrength);
                 return half4(ToOutputColor(color),VisibilityFade(WaterPathLength(i.world)));
             }
             ENDHLSL
