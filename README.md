@@ -50,6 +50,7 @@ Low polygon counts are not a style requirement. Texture treatment, pixelation an
 - [ ] Explore day/night lighting and ambience.
 - [ ] Additional wildlife: giant squid, octopus and crabs.
 - [ ] Other biomes, including the abyssal zone. Consult the creator's books for inspiration.
+- [ ] Cool idea: Storm, decrease visibility and sunlight, and make swinging more violent on surface
 
 # Misc
 
