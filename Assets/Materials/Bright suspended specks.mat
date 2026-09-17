@@ -30,16 +30,18 @@ Material:
     m_Ints: []
     m_Floats:
     - _CloudConcentration: 0
-    - _CoreOpacity: 1
+    - _CoreOpacity: 0.6
     - _DepthTint: 0
     - _DistanceFade: 1
     - _FarFadeEnd: 15
     - _FarFadeStart: 12
     - _HorizontalDistance: 0
-    - _NearFadeEnd: 0.6
-    - _NearFadeStart: 0.15
-    - _OpacityContrast: 1
+    - _NearFadeEnd: 3
+    - _NearFadeStart: 0.8
+    - _OpacityContrast: 0
     - _OpacityGain: 1.333333
+    - _OpacitySteps: 0
+    - _PixelGrid: 0
     - _PoreFrequency: 256
     - _Porosity: 0
     - _TextureColorStrength: 0

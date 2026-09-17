@@ -55,6 +55,7 @@ namespace DeepSky.World.Population
             if ((new Vector2(x, z) - world.Spawn).sqrMagnitude < world.ClearingRadius * world.ClearingRadius
                 || Vector3.Angle(Vector3.up, normal) > rule.MaximumSlope
                 || rock < rule.RockWeightRange.x || rock > rule.RockWeightRange.y
+                || !AcceptsRegion(world, rule, x, z)
                 || (rule.FollowVegetationPatches && CoordinateRandom.Value01(seed, index, 0, 4) > world.VegetationPatch(x, z)))
             {
                 return false;
@@ -65,6 +66,24 @@ namespace DeepSky.World.Population
             }
             position = new Vector3(x, height + rule.SeabedClearance, z);
             return true;
+        }
+
+        /// <summary>Filters species through a shared world-space pattern without chunk seams.</summary>
+        /// <param name="world">Snapshot supplying the world seed.</param>
+        /// <param name="rule">Optional region identity, interval in metres and accepted zero-to-one range.</param>
+        /// <param name="x">Candidate world X in metres.</param>
+        /// <param name="z">Candidate world Z in metres.</param>
+        /// <returns>True when regional filtering is disabled or the candidate is inside its range.</returns>
+        private static bool AcceptsRegion(WorldData world, PopulationRule rule, float x, float z)
+        {
+            if (rule.RegionStream == 0)
+            {
+                return true;
+            }
+            float offsetX = CoordinateRandom.Value01(world.Seed, rule.RegionStream, 0, 81) * 1000f;
+            float offsetZ = CoordinateRandom.Value01(world.Seed, rule.RegionStream, 0, 82) * 1000f;
+            float value = Mathf.Clamp01(Mathf.PerlinNoise(x / rule.RegionSize + offsetX, z / rule.RegionSize + offsetZ));
+            return value >= rule.RegionRange.x && value <= rule.RegionRange.y;
         }
 
         /// <summary>Samples the uniform multiplier for a candidate's prefab scale.</summary>

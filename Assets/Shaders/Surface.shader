@@ -20,6 +20,8 @@ Shader "DeepSky/Surface"
         _FloorMapping ("Floor repeats per metre XY and offset ZW", Vector) = (.3125,.3125,0,0)
         _RockWorldScale ("Rock repeats per metre", Float) = 0.125
         _TerrainNormalStrength ("Terrain normal detail", Range(0,1)) = 1
+        _SandColor ("Sand display tint", Vector) = (1,1,1,1)
+        _RockColor ("Rock display tint", Vector) = (1,1,1,1)
         _TerrainBlend ("Vertex terrain blend", Float) = 0
         _Cutout ("Texture alpha coverage", Float) = 0
         [ToggleUI] _HideInInterior ("Hide inside base", Float) = 0
@@ -76,7 +78,7 @@ Shader "DeepSky/Surface"
             TEXTURE2D(_AlgaSandMap); SAMPLER(sampler_AlgaSandMap);
             TEXTURE2D(_RockHighlightMap); SAMPLER(sampler_RockHighlightMap);
             CBUFFER_START(UnityPerMaterial)
-                float4 _BaseMap_ST, _BaseColor, _OverlayEmissionColor;
+                float4 _BaseMap_ST, _BaseColor, _OverlayEmissionColor, _SandColor, _RockColor;
                 float4 _RockHighlightGrid, _FloorMapping, _CausticScroll;
                 float _CausticStrength, _WorldUV, _Cutoff, _Sway, _Fish, _Emission, _Glyph, _Floor;
                 float _WaveHeight, _WaveAmplitude, _CardSway, _UseAlphaAsHeight, _WaveFactor, _RootedSway;
@@ -155,6 +157,9 @@ Shader "DeepSky/Surface"
                 rockTex.rgb = ToDisplayColor(rockTex.rgb);
                 half4 algaSandTex = SAMPLE_TEXTURE2D(_AlgaSandMap,sampler_PointRepeat,uv);
                 algaSandTex.rgb = ToDisplayColor(algaSandTex.rgb);
+                float3 sandTint = lerp(float3(1,1,1), _SandColor.rgb, _TerrainBlend);
+                tex.rgb *= sandTint;
+                rockTex.rgb *= _RockColor.rgb;
                 tex = tex*sandWeight + rockTex*rockWeight + algaSandTex*algaSandWeight;
                 clip(lerp(1,tex.a,_Cutout) - _Cutoff);
                 float3 normal = normalize(i.normal);
@@ -169,10 +174,16 @@ Shader "DeepSky/Surface"
                     float3 surfaceNormal = normal;
                     if (_TerrainNormalStrength > 0)
                     {
-                        float3 bump = (SAMPLE_TEXTURE2D(_NormalMap,sampler_PointRepeat,uv).rgb-.5)*(sandWeight+algaSandWeight)
-                            + (SAMPLE_TEXTURE2D(_RockNormal,sampler_PointRepeat,uv).rgb-.5)*rockWeight;
-                        bump = normalize(bump + float3(0, 0, 0.0001));
-                        surfaceNormal = normalize(lerp(normal, FloorNormal(normal,bump), _TerrainNormalStrength));
+                        float2 sandSlope = TerrainNormalSlope(SAMPLE_TEXTURE2D(_NormalMap,sampler_PointRepeat,uv).rgb);
+                        float2 rockX = TerrainNormalSlope(SAMPLE_TEXTURE2D(_RockNormal,sampler_PointRepeat,rockPosition.zy).rgb);
+                        float2 rockY = TerrainNormalSlope(SAMPLE_TEXTURE2D(_RockNormal,sampler_PointRepeat,rockPosition.xz).rgb);
+                        float2 rockZ = TerrainNormalSlope(SAMPLE_TEXTURE2D(_RockNormal,sampler_PointRepeat,rockPosition.xy).rgb);
+                        float3 rockSlope = float3(0,rockX.y,rockX.x) * rockWeights.x
+                            + float3(rockY.x,0,rockY.y) * rockWeights.y
+                            + float3(rockZ.x,rockZ.y,0) * rockWeights.z;
+                        float3 slope = float3(sandSlope.x,0,sandSlope.y) * (sandWeight+algaSandWeight)
+                            + rockSlope * rockWeight;
+                        surfaceNormal = TerrainDetailNormal(normal, slope, _TerrainNormalStrength);
                     }
                     float falloff = saturate((10 - distanceToCamera) * .4);
                     float diffuse = saturate(dot(surfaceNormal,eyeDirection));

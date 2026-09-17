@@ -35,6 +35,9 @@ MonoBehaviour:
         density: 0.075
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.67, y: 1.33}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -48,6 +51,9 @@ MonoBehaviour:
         density: 0.075
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.67, y: 1.33}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -61,6 +67,9 @@ MonoBehaviour:
         density: 0.003
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 1
+        regionSize: 40
+        regionRange: {x: 0, y: 0.56}
         scaleMultiplier: {x: 0.75, y: 1.15}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -74,6 +83,9 @@ MonoBehaviour:
         density: 0.003
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 1
+        regionSize: 40
+        regionRange: {x: 0.48, y: 1}
         scaleMultiplier: {x: 0.8, y: 1.15}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -87,6 +99,9 @@ MonoBehaviour:
         density: 0.02
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.7, y: 1.25}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -100,6 +115,9 @@ MonoBehaviour:
         density: 0.025
         maximumSlope: 40
         followVegetationPatches: 0
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.6, y: 1.5}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}
@@ -113,6 +131,9 @@ MonoBehaviour:
         density: 0.0042
         maximumSlope: 80
         followVegetationPatches: 0
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.85, y: 1.35}
         seabedClearance: 0
         rockWeightRange: {x: 0.65, y: 1}
@@ -126,6 +147,9 @@ MonoBehaviour:
         density: 0.0042
         maximumSlope: 80
         followVegetationPatches: 0
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.85, y: 1.35}
         seabedClearance: 0
         rockWeightRange: {x: 0.65, y: 1}
@@ -139,6 +163,9 @@ MonoBehaviour:
         density: 0.0006
         maximumSlope: 40
         followVegetationPatches: 0
+        regionStream: 0
+        regionSize: 40
+        regionRange: {x: 0, y: 1}
         scaleMultiplier: {x: 0.85, y: 1.25}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 0.25}
@@ -152,6 +179,9 @@ MonoBehaviour:
         density: 0.007
         maximumSlope: 35
         followVegetationPatches: 1
+        regionStream: 1
+        regionSize: 40
+        regionRange: {x: 0, y: 0.56}
         scaleMultiplier: {x: 0.75, y: 1.15}
         seabedClearance: 0
         rockWeightRange: {x: 0, y: 1}

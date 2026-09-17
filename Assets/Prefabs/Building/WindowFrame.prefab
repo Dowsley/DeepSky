@@ -33,6 +33,7 @@ Transform:
   m_Children:
   - {fileID: 1401258566768210249}
   - {fileID: 1376506277856143964}
+  - {fileID: 4040831359976761717}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1534594940062962500
@@ -48,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Building.Presentation.BuildingPiece
   surface: 1
+  lamp: {fileID: 4040831359976761717}
 --- !u!65 &7902755083384895564
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -159,6 +161,37 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &7987191763058324657
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4040831359976761717}
+  m_Layer: 0
+  m_Name: Lamp light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4040831359976761717
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7987191763058324657}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.52382255, y: 0, z: 0, w: 0.85182744}
+  m_LocalPosition: {x: 0, y: 3.25, z: 0.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1759258175626244193}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1511235041689884322
 PrefabInstance:
   m_ObjectHideFlags: 0
