@@ -22,6 +22,7 @@ Shader "DeepSky/Surface"
         _TerrainNormalStrength ("Terrain normal detail", Range(0,1)) = 1
         _TerrainBlend ("Vertex terrain blend", Float) = 0
         _Cutout ("Texture alpha coverage", Float) = 0
+        [ToggleUI] _HideInInterior ("Hide inside base", Float) = 0
         _TextureAlpha ("Blended texture alpha", Float) = 0
         [ToggleUI] _SurfaceOverlay ("Surface overlay coverage", Float) = 0
         _OverlaySheen ("Mineral sheen", Range(0,1)) = 0
@@ -79,7 +80,7 @@ Shader "DeepSky/Surface"
                 float4 _RockHighlightGrid, _FloorMapping, _CausticScroll;
                 float _CausticStrength, _WorldUV, _Cutoff, _Sway, _Fish, _Emission, _Glyph, _Floor;
                 float _WaveHeight, _WaveAmplitude, _CardSway, _UseAlphaAsHeight, _WaveFactor, _RootedSway;
-                float _TerrainBlend, _Cutout, _TextureAlpha, _AlphaEmission, _TopLight;
+                float _TerrainBlend, _Cutout, _TextureAlpha, _AlphaEmission, _TopLight, _HideInInterior;
                 float _RockWorldScale, _TerrainNormalStrength, _CausticTileSize;
                 float _ProximityLightStrength;
                 float _SurfaceOverlay, _OverlaySheen;
@@ -126,7 +127,7 @@ Shader "DeepSky/Surface"
             /// <returns>Output-space color and coverage, discarding clipped or invisible fragments.</returns>
             half4 Frag(Varyings i):SV_Target
             {
-                if ((_RootedSway > .5 || _CardSway > 0 || _Sway > 0) && PointInInterior(i.world))
+                if ((_HideInInterior > .5 || _RootedSway > .5 || _CardSway > 0 || _Sway > 0) && PointInInterior(i.world))
                 {
                     discard;
                 }

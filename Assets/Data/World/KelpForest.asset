@@ -22,6 +22,7 @@ MonoBehaviour:
   - rid: 8427921804409962574
   - rid: 8427921804409962575
   - rid: 8427921804409962576
+  - rid: 8427921937900503040
   mineralSeparation: 6
   references:
     version: 2
@@ -57,7 +58,7 @@ MonoBehaviour:
       data:
         label: Tall kelp
         seedStream: 3
-        density: 0.01
+        density: 0.003
         maximumSlope: 35
         followVegetationPatches: 1
         scaleMultiplier: {x: 0.75, y: 1.15}
@@ -143,3 +144,16 @@ MonoBehaviour:
         rockWeightRange: {x: 0, y: 0.25}
         alignToSurface: 1
         prefab: {fileID: 5098775116852410249, guid: 8e1872cd80a46494a95aed71eb922f9d, type: 3}
+    - rid: 8427921937900503040
+      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+      data:
+        label: Whorled kelp
+        seedStream: 7
+        density: 0.007
+        maximumSlope: 35
+        followVegetationPatches: 1
+        scaleMultiplier: {x: 0.75, y: 1.15}
+        seabedClearance: 0
+        rockWeightRange: {x: 0, y: 1}
+        alignToSurface: 0
+        prefab: {fileID: 1850461139639922252, guid: 29412bba767ad430ebbd35a4bcc0ab99, type: 3}

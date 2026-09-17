@@ -9,6 +9,12 @@ namespace DeepSky.Rendering.CameraEffects
     /// <summary>Resamples the completed scene onto a virtual pixel grid, preserving full-resolution overlay UI.</summary>
     internal sealed class RetroPresentationPass : ScriptableRenderPass
     {
+        private static readonly int PixelationId = Shader.PropertyToID("_Pixelation");
+        private static readonly int ColorQuantizationId = Shader.PropertyToID("_ColorQuantization");
+        private static readonly int DitheringId = Shader.PropertyToID("_Dithering");
+
+        private readonly MaterialPropertyBlock properties = new MaterialPropertyBlock();
+
         internal Material Material { get; }
 
         /// <summary>Schedules presentation after scene post-processing and before the final display blit.</summary>
@@ -18,6 +24,18 @@ namespace DeepSky.Rendering.CameraEffects
             Material = material;
             renderPassEvent = RenderPassEvent.AfterRenderingPostProcessing;
             requiresIntermediateTexture = true;
+        }
+
+        /// <summary>Sets camera-local effect switches without modifying the shared material asset.</summary>
+        /// <param name="pixelation">Whether to sample a reduced-resolution pixel grid.</param>
+        /// <param name="colorQuantization">Whether to reduce color precision.</param>
+        /// <param name="dithering">Whether to dither the color quantization thresholds.</param>
+        internal void ConfigureEffects(bool pixelation, bool colorQuantization, bool dithering)
+        {
+            properties.Clear();
+            properties.SetFloat(PixelationId, pixelation ? 1f : 0f);
+            properties.SetFloat(ColorQuantizationId, colorQuantization ? 1f : 0f);
+            properties.SetFloat(DitheringId, dithering ? 1f : 0f);
         }
 
         /// <summary>Records one full-resolution presentation pass. The graph owns its temporary output.</summary>
@@ -37,7 +55,7 @@ namespace DeepSky.Rendering.CameraEffects
             descriptor.clearBuffer = false;
             descriptor.msaaSamples = MSAASamples.None;
             var output = graph.CreateTexture(descriptor);
-            graph.AddBlitPass(new RenderGraphUtils.BlitMaterialParameters(source, output, Material, 0),
+            graph.AddBlitPass(new RenderGraphUtils.BlitMaterialParameters(source, output, Material, 0, properties, 0, 0),
                 "retro presentation");
             resources.cameraColor = output;
         }

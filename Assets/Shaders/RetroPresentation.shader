@@ -8,6 +8,9 @@ Shader "DeepSky/RetroPresentation"
         _ColorLevels ("Levels per color channel", Range(16,256)) = 32
         _DitherStrength ("Ordered dithering", Range(0,1)) = 0.65
         _Strength ("Presentation blend", Range(0,1)) = 1
+        [HideInInspector] _Pixelation ("Pixelation", Float) = 1
+        [HideInInspector] _ColorQuantization ("Color quantization", Float) = 1
+        [HideInInspector] _Dithering ("Dithering", Float) = 1
     }
     SubShader
     {
@@ -24,6 +27,7 @@ Shader "DeepSky/RetroPresentation"
 
             CBUFFER_START(UnityPerMaterial)
                 float _PixelHeight, _ColorLevels, _DitherStrength, _Strength;
+                float _Pixelation, _ColorQuantization, _Dithering;
             CBUFFER_END
 
             /* Returns a centered 4x4 Bayer threshold for an integer virtual-pixel coordinate. */
@@ -42,16 +46,23 @@ Shader "DeepSky/RetroPresentation"
             half4 Frag(Varyings input) : SV_Target
             {
                 float2 sourceSize = _BlitTexture_TexelSize.zw;
-                float height = min(sourceSize.y, max(1, round(_PixelHeight)));
+                float height = _Pixelation > 0.5 ? min(sourceSize.y, max(1, round(_PixelHeight))) : sourceSize.y;
                 float2 grid = float2(max(1, round(height * sourceSize.x / sourceSize.y)), height);
                 float2 pixel = min(floor(input.texcoord * grid), grid - 1);
                 float2 uv = (pixel + 0.5) / grid;
-                float3 color = ToDisplayColor(SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb);
-                float levels = max(2, round(_ColorLevels)) - 1;
-                float threshold = DitherThreshold((uint2)pixel) * _DitherStrength;
-                color = saturate(floor(color * levels + 0.5 + threshold) / levels);
                 float3 original = SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_LinearClamp, input.texcoord).rgb;
-                return half4(lerp(original, ToOutputColor(color), _Strength), 1);
+                float3 color = _Pixelation > 0.5
+                    ? SAMPLE_TEXTURE2D_X(_BlitTexture, sampler_PointClamp, uv).rgb
+                    : original;
+                if (_ColorQuantization > 0.5)
+                {
+                    color = ToDisplayColor(color);
+                    float levels = max(2, round(_ColorLevels)) - 1;
+                    float threshold = _Dithering > 0.5 ? DitherThreshold((uint2)pixel) * _DitherStrength : 0;
+                    color = saturate(floor(color * levels + 0.5 + threshold) / levels);
+                    color = ToOutputColor(color);
+                }
+                return half4(lerp(original, color, _Strength), 1);
             }
             ENDHLSL
         }

@@ -12,6 +12,14 @@ namespace DeepSky.Rendering.CameraEffects
         [Tooltip("Material containing resolution, color precision and dithering controls.")]
         [SerializeField] private Material material = null!;
 
+        [Header("Effects")]
+        [Tooltip("Resample the scene onto the material's virtual pixel grid.")]
+        [SerializeField] private bool pixelation = true;
+        [Tooltip("Reduce the number of levels per color channel.")]
+        [SerializeField] private bool colorQuantization = true;
+        [Tooltip("Use ordered dithering when color quantization is enabled.")]
+        [SerializeField] private bool dithering = true;
+
         private Camera view = null!;
         private RetroPresentationPass pass = null!;
 
@@ -35,7 +43,7 @@ namespace DeepSky.Rendering.CameraEffects
         /// <param name="camera">Camera beginning rendering; unrelated cameras are ignored.</param>
         private void BeginCamera(ScriptableRenderContext context, Camera camera)
         {
-            if (!CameraEffectRouting.ShouldRender(camera, view))
+            if ((!pixelation && !colorQuantization) || !CameraEffectRouting.ShouldRender(camera, view))
             {
                 return;
             }
@@ -45,6 +53,7 @@ namespace DeepSky.Rendering.CameraEffects
                 CreatePass();
             }
 
+            pass.ConfigureEffects(pixelation, colorQuantization, dithering);
             CameraEffectRouting.GetRenderer(camera).EnqueuePass(pass);
         }
 
