@@ -16,6 +16,7 @@ namespace DeepSky.Building
         [SerializeField] private DeepSky.Animals.Movement.SwimmingObstacle swimmingObstacle = null!;
 
         private readonly List<BuildingPiece> pieces = new();
+        private readonly List<Bounds> swimmingVolumes = new();
         private WorldData terrain = null!;
 
         public BuildingGrid Grid { get; private set; } = null!;
@@ -116,6 +117,7 @@ namespace DeepSky.Building
                 Destroy(piece.gameObject);
             }
             pieces.Clear();
+            swimmingVolumes.Clear();
             bool first = true;
             foreach (Vector3Int cell in Grid.Coordinates)
             {
@@ -123,6 +125,9 @@ namespace DeepSky.Building
                 Vector3 center = CellCenter(cell);
                 var volume = new Bounds(center + Vector3.up * plan.LevelHeight * .5f,
                     new Vector3(plan.CellSize, plan.LevelHeight, plan.CellSize));
+                Bounds shellVolume = volume;
+                shellVolume.Expand(.4f);
+                swimmingVolumes.Add(shellVolume);
                 if (first)
                 {
                     Bounds = volume;
@@ -173,7 +178,17 @@ namespace DeepSky.Building
                     Add(kit.Support, cell, center, Quaternion.identity, new Vector3(1f, height, 1f));
                 }
             }
-            swimmingObstacle.SetBounds(Bounds);
+            foreach (BuildingPiece piece in pieces)
+            {
+                if (piece.Surface == BuildingSurface.Support)
+                {
+                    foreach (Renderer visual in piece.GetComponentsInChildren<Renderer>())
+                    {
+                        swimmingVolumes.Add(visual.bounds);
+                    }
+                }
+            }
+            swimmingObstacle.SetVolumes(swimmingVolumes);
             Changed?.Invoke();
         }
 

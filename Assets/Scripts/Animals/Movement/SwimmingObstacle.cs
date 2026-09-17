@@ -3,11 +3,11 @@ using UnityEngine;
 
 namespace DeepSky.Animals.Movement
 {
-    /// <summary>Reserves a world-space volume that swimming animals avoid.</summary>
+    /// <summary>Reserves occupied world-space volumes that swimming animals avoid.</summary>
     public sealed class SwimmingObstacle : MonoBehaviour
     {
         private static readonly HashSet<SwimmingObstacle> Active = new();
-        private Bounds bounds = new();
+        private readonly List<Bounds> volumes = new();
 
         /// <summary>Registers this obstacle while its owner is active.</summary>
         private void OnEnable()
@@ -21,11 +21,12 @@ namespace DeepSky.Animals.Movement
             Active.Remove(this);
         }
 
-        /// <summary>Updates the occupied envelope after construction changes.</summary>
-        /// <param name="volume">World-space bounds in metres.</param>
-        public void SetBounds(Bounds volume)
+        /// <summary>Copies room and structural envelopes after construction changes.</summary>
+        /// <param name="occupied">World-space bounds in metres; the caller retains the collection.</param>
+        public void SetVolumes(IEnumerable<Bounds> occupied)
         {
-            bounds = volume;
+            volumes.Clear();
+            volumes.AddRange(occupied);
         }
 
         /// <summary>Checks whether an animal center overlaps a reserved volume.</summary>
@@ -36,11 +37,14 @@ namespace DeepSky.Animals.Movement
         {
             foreach (SwimmingObstacle obstacle in Active)
             {
-                Bounds expanded = obstacle.bounds;
-                expanded.Expand(radius * 2f);
-                if (expanded.Contains(position))
+                foreach (Bounds volume in obstacle.volumes)
                 {
-                    return false;
+                    Bounds expanded = volume;
+                    expanded.Expand(radius * 2f);
+                    if (expanded.Contains(position))
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -64,17 +68,20 @@ namespace DeepSky.Animals.Movement
             var ray = new Ray(origin, motion / nearest);
             foreach (SwimmingObstacle obstacle in Active)
             {
-                Bounds expanded = obstacle.bounds;
-                expanded.Expand(radius * 2f);
-                if (expanded.IntersectRay(ray, out float distance) && distance <= nearest)
+                foreach (Bounds volume in obstacle.volumes)
                 {
-                    nearest = distance;
-                    Vector3 point = ray.GetPoint(distance) - expanded.center;
-                    Vector3 relative = new(Mathf.Abs(point.x) / expanded.extents.x,
-                        Mathf.Abs(point.y) / expanded.extents.y, Mathf.Abs(point.z) / expanded.extents.z);
-                    normal = relative.x >= relative.y && relative.x >= relative.z ? Vector3.right * Mathf.Sign(point.x)
-                        : relative.y >= relative.z ? Vector3.up * Mathf.Sign(point.y) : Vector3.forward * Mathf.Sign(point.z);
-                    blocked = true;
+                    Bounds expanded = volume;
+                    expanded.Expand(radius * 2f);
+                    if (expanded.IntersectRay(ray, out float distance) && distance <= nearest)
+                    {
+                        nearest = distance;
+                        Vector3 point = ray.GetPoint(distance) - expanded.center;
+                        Vector3 relative = new(Mathf.Abs(point.x) / expanded.extents.x,
+                            Mathf.Abs(point.y) / expanded.extents.y, Mathf.Abs(point.z) / expanded.extents.z);
+                        normal = relative.x >= relative.y && relative.x >= relative.z ? Vector3.right * Mathf.Sign(point.x)
+                            : relative.y >= relative.z ? Vector3.up * Mathf.Sign(point.y) : Vector3.forward * Mathf.Sign(point.z);
+                        blocked = true;
+                    }
                 }
             }
             return blocked;
@@ -83,35 +90,54 @@ namespace DeepSky.Animals.Movement
         /// <summary>Clears an overlap caused by placing a structure around an animal.</summary>
         /// <param name="position">Current world center in metres.</param>
         /// <param name="radius">Nonnegative body clearance in metres.</param>
-        /// <returns>Nearest face exit for each overlapping obstacle.</returns>
-        public static Vector3 Resolve(Vector3 position, float radius)
+        /// <param name="navigation">Body-specific terrain and water clearance checks.</param>
+        /// <returns>Nearest valid face exit, or the original position if none is available.</returns>
+        internal static Vector3 Resolve(Vector3 position, float radius, SwimmingNavigation navigation)
         {
+            if (IsClear(position, radius))
+            {
+                return position;
+            }
+            Vector3 nearest = position;
+            float distance = float.PositiveInfinity;
+            Bounds combined = new(position, Vector3.zero);
             foreach (SwimmingObstacle obstacle in Active)
             {
-                Bounds expanded = obstacle.bounds;
-                expanded.Expand(radius * 2f + .02f);
-                if (!expanded.Contains(position))
+                foreach (Bounds volume in obstacle.volumes)
                 {
-                    continue;
+                    combined.Encapsulate(volume);
+                    FindExit(volume, position, radius, navigation, ref nearest, ref distance);
                 }
-                Vector3 nearest = position;
-                float distance = float.PositiveInfinity;
-                for (int axis = 0; axis < 3; axis++)
+            }
+            FindExit(combined, position, radius, navigation, ref nearest, ref distance);
+            return nearest;
+        }
+
+        /// <summary>Considers envelope faces without placing the body inside terrain or another room.</summary>
+        /// <param name="volume">Candidate exit envelope in world metres.</param>
+        /// <param name="position">Overlapping body centre.</param>
+        /// <param name="radius">Body clearance in metres.</param>
+        /// <param name="navigation">Body-specific water clearance checks.</param>
+        /// <param name="nearest">Closest valid exit found across all envelopes.</param>
+        /// <param name="distance">Squared distance to the closest valid exit.</param>
+        private static void FindExit(Bounds volume, Vector3 position, float radius, SwimmingNavigation navigation,
+            ref Vector3 nearest, ref float distance)
+        {
+            volume.Expand(radius * 2f + .04f);
+            for (int axis = 0; axis < 3; axis++)
+            {
+                for (int side = 0; side < 2; side++)
                 {
-                    for (int side = 0; side < 2; side++)
+                    Vector3 candidate = position;
+                    candidate[axis] = side == 0 ? volume.min[axis] : volume.max[axis];
+                    float separation = (candidate - position).sqrMagnitude;
+                    if (separation < distance && IsClear(candidate, radius) && navigation.IsClear(candidate, candidate))
                     {
-                        float face = side == 0 ? expanded.min[axis] - .01f : expanded.max[axis] + .01f;
-                        if (Mathf.Abs(position[axis] - face) < distance)
-                        {
-                            distance = Mathf.Abs(position[axis] - face);
-                            nearest = position;
-                            nearest[axis] = face;
-                        }
+                        nearest = candidate;
+                        distance = separation;
                     }
                 }
-                position = nearest;
             }
-            return position;
         }
     }
 }

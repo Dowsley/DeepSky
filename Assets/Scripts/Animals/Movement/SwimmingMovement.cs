@@ -18,6 +18,8 @@ namespace DeepSky.Animals.Movement
         [SerializeField, Min(.1f)] private float lookAheadDistance = 2f;
 
         private WorldData world = null!;
+        private SwimmingNavigation navigation = null!;
+        private SwimmingTerrain terrain = null!;
         private Vector3 velocity = Vector3.zero;
         private Vector3 travelHeading = Vector3.forward;
         private float floorClearance = 0f;
@@ -26,6 +28,7 @@ namespace DeepSky.Animals.Movement
 
         protected Vector3 TravelHeading => travelHeading;
         protected abstract float ModelYawOffset { get; }
+        protected virtual bool MaintainCruiseClearance => false;
 
         /// <summary>Validates the terrain context supplied before activation.</summary>
         protected virtual void Start()
@@ -41,6 +44,7 @@ namespace DeepSky.Animals.Movement
         public void JoinWorld(WorldData terrain, Vector3 direction, float height = -1f, float speed = -1f)
         {
             world = terrain;
+            this.terrain = SwimmingTerrain.For(terrain);
             travelHeading = Vector3.ProjectOnPlane(direction.sqrMagnitude > .001f ? direction : heading, Vector3.up).normalized;
             if (travelHeading.sqrMagnitude < .001f)
             {
@@ -50,9 +54,22 @@ namespace DeepSky.Animals.Movement
             cruiseSpeed = speed >= 0f ? speed : swimSpeed;
             foreach (Renderer visual in GetComponentsInChildren<Renderer>())
             {
-                bodyRadius = Mathf.Max(bodyRadius, visual.bounds.extents.magnitude);
+                bodyRadius = Mathf.Max(bodyRadius, visual.bounds.extents.magnitude + Vector3.Distance(visual.bounds.center, transform.position));
             }
-            transform.position = SwimmingObstacle.Resolve(transform.position, bodyRadius);
+            float safeHeight = Mathf.Max(minimumClearance, bodyRadius);
+            navigation = new SwimmingNavigation(world, bodyRadius, safeHeight);
+            Vector3 position = transform.position;
+            for (int i = 0; i < 5; i++)
+            {
+                Vector3 offset = i == 0 ? Vector3.zero : (i <= 2 ? Vector3.right : Vector3.forward) * (i % 2 == 0 ? -bodyRadius : bodyRadius);
+                float floor = this.terrain.Height(position + offset);
+                if (!float.IsInfinity(floor))
+                {
+                    position.y = Mathf.Max(position.y, floor + safeHeight + .2f);
+                }
+            }
+            transform.position = position;
+            transform.position = SwimmingObstacle.Resolve(transform.position, bodyRadius, navigation);
             velocity = travelHeading * cruiseSpeed;
             FaceVelocity();
         }
@@ -62,21 +79,7 @@ namespace DeepSky.Animals.Movement
         /// <returns>True when the route remains above terrain and inside the world.</returns>
         protected bool CanSwimTo(Vector3 destination)
         {
-            Vector3 start = transform.position;
-            if (SwimmingObstacle.Blocks(start, destination - start, bodyRadius, out _))
-            {
-                return false;
-            }
-            int steps = Mathf.Max(1, Mathf.CeilToInt(Vector3.Distance(start, destination) / 1.5f));
-            for (int i = 1; i <= steps; i++)
-            {
-                Vector3 point = Vector3.Lerp(start, destination, (float)i / steps);
-                if (!world.TryGetHeight(point, out float floor) || point.y < floor + minimumClearance || point.y >= 0f)
-                {
-                    return false;
-                }
-            }
-            return true;
+            return navigation.IsClear(transform.position, destination);
         }
 
         /// <summary>Integrates steering, terrain clearance and orientation for one frame.</summary>
@@ -90,47 +93,43 @@ namespace DeepSky.Animals.Movement
             {
                 return;
             }
-            Vector3 position = SwimmingObstacle.Resolve(transform.position, bodyRadius);
-            Vector3 ahead = position + Vector3.ProjectOnPlane(direction, Vector3.up).normalized * lookAheadDistance;
+            Vector3 position = SwimmingObstacle.Resolve(transform.position, bodyRadius, navigation);
+            float planningDistance = Mathf.Max(lookAheadDistance, bodyRadius * 2f, cruiseSpeed * speedMultiplier * 3f);
+            Vector3 ahead = position + Vector3.ProjectOnPlane(direction, Vector3.up).normalized * planningDistance;
             if (!world.Contains(new Vector2(ahead.x, ahead.z)))
             {
                 direction = new Vector3(-position.x, 0f, -position.z).normalized;
-                ahead = position + direction * lookAheadDistance;
+                ahead = position + direction * planningDistance;
             }
             float speed = cruiseSpeed * Mathf.Max(0f, speedMultiplier);
             Vector3 desired = direction.normalized * speed;
-            if (world.TryGetHeight(ahead, out float aheadFloor))
+            float aheadFloor = terrain.Height(ahead);
+            if (!float.IsInfinity(aheadFloor))
             {
-                float targetHeight = followFloor ? aheadFloor + floorClearance : Mathf.Max(position.y, aheadFloor + minimumClearance);
-                if (followFloor || position.y < targetHeight)
+                float safeHeight = Mathf.Max(minimumClearance, bodyRadius);
+                float targetHeight = followFloor ? aheadFloor + Mathf.Max(floorClearance, safeHeight) : Mathf.Max(position.y, aheadFloor + safeHeight);
+                if (MaintainCruiseClearance)
                 {
-                    desired.y = (targetHeight - position.y) * heightCorrectionRate;
+                    targetHeight = Mathf.Max(terrain.Height(position) + floorClearance, aheadFloor + safeHeight);
+                }
+                if (followFloor || MaintainCruiseClearance || position.y < targetHeight)
+                {
+                    float maximumRise = speed * Mathf.Sin(maximumPitch * Mathf.Deg2Rad);
+                    desired.y = Mathf.Clamp((targetHeight - position.y) * heightCorrectionRate, -maximumRise, maximumRise);
                 }
             }
-            if (SwimmingObstacle.Blocks(position, desired.normalized * Mathf.Max(lookAheadDistance, speed * 2f), bodyRadius, out Vector3 normal))
-            {
-                Vector3 tangent = Vector3.Cross(Vector3.up, normal);
-                if (tangent.sqrMagnitude < .001f)
-                {
-                    tangent = travelHeading;
-                }
-                if (Vector3.Dot(tangent, desired) < 0f)
-                {
-                    tangent = -tangent;
-                }
-                desired = (tangent + normal * .65f).normalized * speed;
-            }
+            desired = navigation.Steer(position, desired, planningDistance) * speed;
             velocity = Vector3.Lerp(velocity, desired.normalized * speed, 1f - Mathf.Exp(-delta / steeringResponseTime));
             Vector3 next = position + velocity * delta;
-            if (world.TryGetHeight(next, out float floor))
+            if (!navigation.IsClear(position, next))
             {
-                next.y = Mathf.Max(next.y, floor + minimumClearance);
-            }
-            next.y = Mathf.Min(next.y, -minimumClearance);
-            if (SwimmingObstacle.Blocks(position, next - position, bodyRadius, out Vector3 contact))
-            {
-                velocity = Vector3.ProjectOnPlane(velocity, contact);
-                next = position;
+                velocity = desired;
+                next = position + velocity * delta;
+                if (!navigation.IsClear(position, next))
+                {
+                    velocity = Vector3.zero;
+                    next = position;
+                }
             }
             transform.position = next;
             FaceVelocity();

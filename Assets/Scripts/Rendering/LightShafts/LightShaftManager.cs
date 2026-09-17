@@ -64,18 +64,13 @@ namespace DeepSky.Rendering.LightShafts
             && Quaternion.Angle(transform.rotation, preparedRotation) < RotationToleranceDegrees
             && (Time.timeScale != 0f || Mathf.Abs(Time.time - preparedTime) < TimeToleranceSeconds);
 
-        /// <summary>Allocates the reusable property block for per-beam opacity.</summary>
-        private void Awake()
-        {
-            properties = new MaterialPropertyBlock();
-        }
-
-        /// <summary>Validates references and creates the beam population using the authored random seed.</summary>
+        /// <summary>Validates references and allocates beam state, including after script reloads.</summary>
         private void OnEnable()
         {
             Assert.IsNotNull(shaftPrefab, nameof(shaftPrefab));
             Assert.IsNotNull(atmosphere, nameof(atmosphere));
             Assert.IsNotNull(shaftPrefab.sharedMaterial, "The shaft prefab requires a material.");
+            properties = new MaterialPropertyBlock();
             random = new System.Random(randomSeed);
             CreateShafts();
             prepared = false;

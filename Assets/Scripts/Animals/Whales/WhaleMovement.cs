@@ -10,6 +10,7 @@ namespace DeepSky.Animals.Whales
         private AnimalThreatResponse threat = null!;
 
         protected override float ModelYawOffset => 0f;
+        protected override bool MaintainCruiseClearance => true;
 
         /// <summary>Caches the whale's escape response.</summary>
         private void Awake()

@@ -36,7 +36,7 @@ MonoBehaviour:
     minimumAlive: 5
     groupSpread: 21
     headingVariation: 45
-    clearance: {x: 17.5, y: 32.5}
+    clearance: {x: 20, y: 35}
     scale: {x: 0.9, y: 1.1}
   - prefab: {fileID: 4648692841977459530, guid: c580b4a58faa44780a503b930e455934, type: 3}
     chancePerCheck: 0.2
@@ -54,5 +54,5 @@ MonoBehaviour:
     minimumAlive: 1
     groupSpread: 0
     headingVariation: 45
-    clearance: {x: 32, y: 38}
+    clearance: {x: 46, y: 52}
     scale: {x: 0.9, y: 1.1}
