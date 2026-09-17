@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CoralTissue
+  m_Name: BranchingCoral
   m_Shader: {fileID: 4800000, guid: 5895f34e753f1488ab52dbabb71e2b9f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -17,7 +17,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 3000
+  m_CustomRenderQueue: 2450
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 01ec8e47157bc42d9b947c14b2ec1ded, type: 3}
+        m_Texture: {fileID: 2800000, guid: 703d621bdb5da4ac0830ca6b8801eb9b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Caustics:
@@ -63,32 +63,33 @@ Material:
     - _CausticSpread: 0
     - _CausticStrength: 0
     - _CausticTileSize: 12.8
-    - _Cutoff: 0.1
-    - _Cutout: 0
+    - _Cutoff: 0.35
+    - _Cutout: 1
     - _DepthOffset: 0
     - _DepthWrite: 1
     - _Emission: 0
     - _Fish: 0
     - _Floor: 0
     - _Glyph: 0
-    - _HideInInterior: 0
+    - _HideInInterior: 1
+    - _NearbyLightBoost: 0.35
     - _OverlaySheen: 0
-    - _ProximityLightStrength: 0.6
+    - _ProximityLightStrength: 1
     - _RockWorldScale: 0.125
-    - _RootedSway: 0
+    - _RootedSway: 1
     - _SurfaceOverlay: 0
     - _Sway: 0
     - _TerrainBlend: 0
     - _TerrainNormalStrength: 1
     - _TextureAlpha: 0
-    - _TopLight: 0.35
-    - _UseAlphaAsHeight: 0
-    - _WaveAmplitude: 2
-    - _WaveFactor: 1
-    - _WaveHeight: 0
+    - _TopLight: 0
+    - _UseAlphaAsHeight: 1
+    - _WaveAmplitude: 0.018
+    - _WaveFactor: 1.2
+    - _WaveHeight: 1
     - _WorldUV: 0
     m_Colors:
-    - _BaseColor: {r: 1.05, g: 0.8, b: 0.82, a: 1}
+    - _BaseColor: {r: 0.98, g: 0.98, b: 1, a: 1}
     - _CausticScroll: {r: 0.03384095, g: -0.02785515, b: 0, a: 0}
     - _FloorMapping: {r: 0.3125, g: 0.3125, b: 0, a: 0}
     - _OverlayEmissionColor: {r: 1, g: 1, b: 1, a: 1}

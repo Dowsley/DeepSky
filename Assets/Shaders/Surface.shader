@@ -36,6 +36,7 @@ Shader "DeepSky/Surface"
         _TopLight ("Top directional light", Float) = 0
         _Floor ("Terrain lighting", Float) = 0
         _ProximityLightStrength ("Terrain proximity light strength", Range(0,2)) = 1
+        _NearbyLightBoost ("Surface nearby light boost", Range(0,2)) = 2
         _WorldUV ("World texture scale", Float) = 0
         _Cutoff ("Alpha cutoff", Float) = 0.1
         [Header(Vegetation Motion)]
@@ -85,7 +86,7 @@ Shader "DeepSky/Surface"
                 float _WaveHeight, _WaveAmplitude, _CardSway, _UseAlphaAsHeight, _WaveFactor, _RootedSway;
                 float _TerrainBlend, _Cutout, _TextureAlpha, _AlphaEmission, _TopLight, _HideInInterior;
                 float _RockWorldScale, _TerrainNormalStrength, _CausticTileSize;
-                float _ProximityLightStrength;
+                float _ProximityLightStrength, _NearbyLightBoost;
                 float _SurfaceOverlay, _OverlaySheen;
             CBUFFER_END
             struct Attributes { float4 positionOS:POSITION; float3 normalOS:NORMAL; float2 uv:TEXCOORD0; float2 swayData:TEXCOORD1; float4 color:COLOR; };
@@ -197,7 +198,7 @@ Shader "DeepSky/Surface"
                 {
                     float nearby = clamp(100 / max(dot(toEye,toEye),.001), 1, 3);
                     float directional = 1 + _TopLight*dot(normal,normalize(toEye+float3(0,50,0))) / 1.5;
-                    light *= nearby * directional;
+                    light *= lerp(1, nearby, _NearbyLightBoost * .5) * directional;
                 }
                 // World-space projection keeps caustics independent of sand UVs and chunk boundaries.
                 float2 causticUV = i.world.xz / max(_CausticTileSize, .001);

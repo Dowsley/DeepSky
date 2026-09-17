@@ -23,8 +23,8 @@ MonoBehaviour:
   - rid: 8427921804409962575
   - rid: 8427921804409962576
   - rid: 8427921937900503040
-  - rid: 8427921942431137859
-  - rid: 8427921942431137860
+  - rid: 8427921942431137861
+  - rid: 8427921942431137862
   mineralSeparation: 6
   references:
     version: 2
@@ -189,35 +189,35 @@ MonoBehaviour:
         rockWeightRange: {x: 0, y: 1}
         alignToSurface: 0
         prefab: {fileID: 1850461139639922252, guid: 29412bba767ad430ebbd35a4bcc0ab99, type: 3}
-    - rid: 8427921942431137859
-      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+    - rid: 8427921942431137861
+      type: {class: PlantPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
       data:
-        label: Rose coral shelves
+        label: Branching rock coral
         seedStream: 31
-        density: 0.008
-        maximumSlope: 72
+        density: 0.5
+        maximumSlope: 82
         followVegetationPatches: 0
         regionStream: 7
         regionSize: 28
-        regionRange: {x: 0.3, y: 0.55}
-        scaleMultiplier: {x: 0.55, y: 1.15}
+        regionRange: {x: 0.2, y: 0.72}
+        scaleMultiplier: {x: 0.55, y: 1.05}
         seabedClearance: 0
-        rockWeightRange: {x: 0.65, y: 1}
+        rockWeightRange: {x: 0.6, y: 1}
         alignToSurface: 1
-        prefab: {fileID: 3278466522206251178, guid: 7cc253232790143e58e1ccc6b1502c59, type: 3}
-    - rid: 8427921942431137860
-      type: {class: DecorationPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
+        prefab: {fileID: 6986885140763490448, guid: 5f2063b0d9e874e1ca08fea896a6acb1, type: 3}
+    - rid: 8427921942431137862
+      type: {class: PlantPopulationRule, ns: DeepSky.World.Population, asm: DeepSky}
       data:
-        label: Cupped coral
+        label: Rock hydroid growth
         seedStream: 32
-        density: 0.008
-        maximumSlope: 72
+        density: 0.4
+        maximumSlope: 82
         followVegetationPatches: 0
         regionStream: 7
         regionSize: 28
-        regionRange: {x: 0.55, y: 0.75}
-        scaleMultiplier: {x: 0.55, y: 1.15}
+        regionRange: {x: 0.32, y: 0.8}
+        scaleMultiplier: {x: 0.65, y: 1.25}
         seabedClearance: 0
-        rockWeightRange: {x: 0.65, y: 1}
+        rockWeightRange: {x: 0.6, y: 1}
         alignToSurface: 1
-        prefab: {fileID: 3703295892317954314, guid: 9a69370db806a4c878224d6fa0e9ba87, type: 3}
+        prefab: {fileID: 3479154984399385241, guid: a07fd3d8fd1414128a0b89bfb6f752be, type: 3}

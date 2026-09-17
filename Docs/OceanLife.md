@@ -30,30 +30,49 @@ their species behaviours; navigation supplies clear movement underneath them.
 
 ## Rock coral
 
-The KelpForest content profile contains **Rose coral shelves** and **Cupped coral**
-decoration rules. Density, scale, slope, rock weight and regional coverage are
-editable there. They use rock weight 0.65..1, separate coverage intervals in the
-same 28 m region field, and align to the sampled surface normal. Coral is passive
-scenery, not a harvestable resource or collision obstacle.
+`Assets/Data/World/KelpForest.asset` contains **Branching rock coral** and
+**Rock hydroid growth** plant-batch rules. Edit their Density, Scale Multiplier,
+Rock Weight Range and Region Range in the content-profile Inspector.
+Density is candidates per square metre of horizontal terrain footprint, before
+surface and region rejection, not a count per rock or per sloped square metre.
 
-Meshes are original irregular, layered plate forms, with separate tissue,
-growing-margin and underside materials. The original generated tissue image is
-`Assets/Textures/Corals/CoralTissue.png`; Unity imports it at 256 pixels with point
-filtering and mipmaps. Materials use the shared underwater surface shader.
+Coral uses density 0.5 and scale 0.55..1.05; hydroid growth uses density 0.4 and
+scale 0.65..1.25. Both attach to rock weight 0.6..1, allow slopes through 82
+degrees and follow the surface normal. Their overlapping intervals in the same
+28 m region field produce mixed coverage and areas of bare rock. The spawn
+clearing remains clear. Other depth profiles do not acquire these populations.
+
+Each colony has three intersecting, slightly leaning texture cards, with
+different crown heights and spans: twelve vertices, six triangles, one material.
+Coral is roughly 0.5..1 m across; hydroids are roughly 0.4..0.8 m across.
+The existing plant pipeline combines each species into chunk-owned meshes.
+There are no per-colony GameObjects, colliders or Update callbacks.
+
+Materials use two-sided alpha clipping with depth writes, point-filtered
+256-pixel texture imports and coverage-preserving mipmaps. Vertex alpha encodes
+root-to-tip height for subtle rooted sway. Coral retains underwater tint, fog,
+torch illumination and interior clipping. **Surface nearby light boost** on
+the coral materials limits close-range overexposure without changing the global
+player light. The shared shader's default preserves other materials' lighting.
+Coral has no emission, harvesting or proximity-retraction behaviour.
 
 ### Provenance
 
-PlateCoral and CuppedCoral were authored for this project in Blender. The local
-authoring file is `Art/Source/PlateCoral.blend`, with geometry construction in
-`Art/Source/author_plate_coral.py`. Both are ignored authoring material; the FBX
-exports and texture are project assets. No downloaded model or photographic
-pixels are embedded in these assets.
+BranchingCoral and RockHydroid meshes are original Blender-authored geometry.
+The ignored editable source is `Art/Source/CoralCards.blend`; construction and
+export settings are in `Art/Source/author_coral_cards.py`. Runtime FBX exports
+are under `Assets/Models/Corals`. No recovered game geometry or texture pixels
+are included.
 
-[Corals of the World: Montipora capricornis](https://www.coralsoftheworld.org/species_factsheets/species_factsheet_summary/montipora-capricornis/)
-was inspected as a shape/color reference only. Its photographs are not licensed
-project textures. CoralTissue was generated using the built-in image-generation
-tool, without an input image. It is generated artwork, not a third-party CC0 scan.
+`Assets/Textures/Corals/BranchingCoral.png` and `RockHydroid.png` are original
+artwork generated with the built-in image-generation tool, without input images.
+Their source alpha is preserved; Unity supplies import downsampling. These are
+generated images, not third-party CC0 assets or claims of exclusive copyright.
 
-Final generation prompt:
+BranchingCoral generation prompt:
 
-> Use case: photorealistic-natural. Asset type: seamless square albedo texture for a living plate coral mesh in a textured PSX-style underwater game. Create original artwork, a flat orthographic macro surface of Montipora-like living coral tissue, fine closely spaced tiny porous corallite cups, shallow irregular radiating grooves, granular calcified organic tissue. Muted warm terracotta and dusty salmon with cream tan speckling, subtle mottling. Texture fills entire square edge to edge. Uniform diffuse neutral lighting, no directional shadows, no perspective, no coral silhouette, no sea background, no edge or border, no text. Approximately 35 to 50 irregular tiny polyp pores across width; retain readable microstructure when imported at 256px. Natural surface detail, not cartoon, not gravel or stones, not giant flower polyps. Seamless tiling on both axes. Matte, restrained contrast, no baked blue underwater tint or glow.
+> Use case: stylized-concept. Asset type: original game texture for alpha-cutout crossed planes, NOT a scene or concept presentation. Create one low spreading branching coral fan, front orthographic view, width about twice height, trunk/root at bottom center, naturally irregular many tapering forked arms reaching diagonally outward. Rich periwinkle/violet-blue branches with pale lavender and soft ivory growing tips, subtle rough organic tissue, dark purple shaded crevices. Uneven clusters of branch forks, some short fingers and some longer lateral arms. Real marine organic appearance with readable chunky shapes suitable for downsampling to 256 pixels, classic textured PSX game aesthetic without faceted polygon look. It should look like a compact coral colony not a tree or fern. Entire silhouette fits in frame with a small transparent margin, base touches near bottom center. Flat diffuse albedo lighting, no cast shadow, no bloom, no glow halo, no rocks, no sand, no ocean scenery, no text. Genuinely transparent background and transparent holes between branches, clean RGBA cutout. Landscape 2:1 canvas. Original artwork, no referenced images.
+
+RockHydroid generation prompt:
+
+> Use case: stylized-concept. Asset type: original transparent RGBA cutout game texture for crossed vegetation planes. One small low spreading tuft of marine green hydroid-like rock growth, fine irregular forked sprigs, many dense short tiny branches growing from a single root along bottom center, twice as wide as tall. Moss green and olive stems with fresh yellow-green growing tips, subtle natural organic tissue texture. Front orthographic albedo view. Fine coral-like branching sprigs, NOT broad leaves, NOT grass blades, NOT a ball, NOT a tree. Natural asymmetric silhouette, clear transparent gaps, readable clumps suitable for downsampling to 128 pixels in a textured PSX underwater game. Diffuse flat lighting, no glow no bloom no shadows. Transparent background including between branches. No rock or ground, no text, no reference imagery. Landscape 2:1 image, fill frame with small margin, root close to bottom.
