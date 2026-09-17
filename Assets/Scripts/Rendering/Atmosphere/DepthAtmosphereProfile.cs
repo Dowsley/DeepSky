@@ -14,8 +14,8 @@ namespace DeepSky.Rendering.Atmosphere
         [Tooltip("Order shallow to deep. These are camera depths, independent of terrain or biome identity.")]
         [SerializeField] private DepthBand[] bands =
         {
-            new DepthBand(100f, new Color(.15f, .53f, .69f), new Color(.104f, .384f, .504f),
-                new Color(.2f, .4f, .53f), 50f, 1f, 1f),
+            new DepthBand(100f, new Color(.175f, .57f, .74f), new Color(.125f, .415f, .55f),
+                new Color(.26f, .48f, .56f), 50f, 1f, 1f),
             new DepthBand(200f, new Color(.11f, .35f, .43f), new Color(.056f, .21f, .28f),
                 new Color(.2f, .4f, .53f), 45f, .3f, 0f),
             new DepthBand(300f, new Color(.048f, .18f, .24f), new Color(.03f, .1f, .2f),
@@ -23,12 +23,13 @@ namespace DeepSky.Rendering.Atmosphere
         };
 
         [Header("Distance haze")]
+        [Tooltip("Width of the haze ramp ending at each band's visibility limit. A smaller width keeps nearby surfaces clear longer.")]
         [SerializeField, Min(.1f)] private float fogTransitionDistance = 40f;
         [SerializeField, Range(0f, 1f)] private float minimumSceneContribution = .1f;
         [SerializeField, Min(.1f)] private float visibilityEdgeFade = 4f;
 
         [Header("Daylight")]
-        [Tooltip("Manual lighting level. This profile does not advance a day/night clock.")]
+        [Tooltip("Maximum lighting level, multiplied by the camera's day/night cycle when assigned.")]
         [SerializeField, Range(0f, 1f)] private float daylight = 1f;
         [SerializeField, Range(0f, 1f)] private float minimumWaterDaylight = .5f;
 
@@ -39,11 +40,12 @@ namespace DeepSky.Rendering.Atmosphere
         internal float Daylight => daylight;
         internal Vector4 FogParameters => new Vector4(fogTransitionDistance, minimumSceneContribution, visibilityEdgeFade, 0f);
 
-        /// <summary>Interpolates ordered depth bands and applies the profile's daylight and cloud-fill settings.</summary>
+        /// <summary>Interpolates ordered depth bands and applies daylight and cloud-fill settings.</summary>
         /// <param name="depth">Camera depth in metres below sea level; clamped to the outermost bands.</param>
+        /// <param name="cycleDaylight">Daily lighting multiplier, clamped to [0, 1]; one preserves manual profile lighting.</param>
         /// <returns>Display-space colors and effect parameters for the requested depth, without modifying the profile.</returns>
         /// <exception cref="InvalidOperationException">The profile contains no depth bands.</exception>
-        internal AtmosphereSample Evaluate(float depth)
+        internal AtmosphereSample Evaluate(float depth, float cycleDaylight = 1f)
         {
             if (bands.Length == 0)
             {
@@ -65,15 +67,16 @@ namespace DeepSky.Rendering.Atmosphere
 
             float blend = Mathf.InverseLerp(lower.Depth, upper.Depth, depth);
             Color ambient = Color.Lerp(lower.Ambient, upper.Ambient, blend);
-            float waterDaylight = Mathf.Max(daylight, minimumWaterDaylight);
+            float effectiveDaylight = daylight * Mathf.Clamp01(cycleDaylight);
+            float waterDaylight = Mathf.Max(effectiveDaylight, minimumWaterDaylight);
             Color cloud = ambient + cloudFill;
             Color shallowCloud = bands[0].Ambient + cloudFill;
             var cloudMultiplier = new Vector4(cloud.r / Mathf.Max(shallowCloud.r, .0001f),
-                cloud.g / Mathf.Max(shallowCloud.g, .0001f), cloud.b / Mathf.Max(shallowCloud.b, .0001f), daylight);
+                cloud.g / Mathf.Max(shallowCloud.g, .0001f), cloud.b / Mathf.Max(shallowCloud.b, .0001f), effectiveDaylight);
             return new AtmosphereSample(Color.Lerp(lower.UpperWater, upper.UpperWater, blend) * waterDaylight,
-                Color.Lerp(lower.LowerWater, upper.LowerWater, blend) * waterDaylight, ambient * daylight,
+                Color.Lerp(lower.LowerWater, upper.LowerWater, blend) * waterDaylight, ambient * effectiveDaylight,
                 Mathf.Lerp(lower.Visibility, upper.Visibility, blend),
-                Mathf.Lerp(lower.Caustics, upper.Caustics, blend) * Mathf.Max(0f, daylight * 1.5f - .5f),
+                Mathf.Lerp(lower.Caustics, upper.Caustics, blend) * Mathf.Max(0f, effectiveDaylight * 1.5f - .5f),
                 Mathf.Lerp(lower.ShaftOpacityLimit, upper.ShaftOpacityLimit, blend), cloudMultiplier);
         }
 

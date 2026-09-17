@@ -21,13 +21,16 @@ namespace DeepSky.Rendering.Atmosphere
 
         [Header("References")]
         [SerializeField] private DepthAtmosphereProfile profile = null!;
+        [Tooltip("Optional shared clock. An absent or disabled clock leaves the profile's manual daylight in control.")]
+        [SerializeField] private DayNightCycle? dayNightCycle = null;
 
         [Header("World coordinates")]
         [SerializeField] private float seaLevel = 0f;
 
         private Camera view = null!;
 
-        internal float Daylight => profile.Daylight;
+        private float CycleDaylight => dayNightCycle && dayNightCycle.isActiveAndEnabled ? dayNightCycle.Daylight : 1f;
+        internal float Daylight => profile.Daylight * CycleDaylight;
 
         /// <summary>Validates the profile and subscribes this camera to per-render atmosphere updates.</summary>
         private void OnEnable()
@@ -51,7 +54,7 @@ namespace DeepSky.Rendering.Atmosphere
         /// <returns>The profile's interpolated shaft-opacity limit in [0, 1].</returns>
         internal float ShaftOpacityLimit(float cameraHeight)
         {
-            return profile.Evaluate(seaLevel - cameraHeight).ShaftOpacityLimit;
+            return profile.Evaluate(seaLevel - cameraHeight, CycleDaylight).ShaftOpacityLimit;
         }
 
         /// <summary>Uploads camera-depth atmosphere globals before an eligible camera renders.</summary>
@@ -64,7 +67,7 @@ namespace DeepSky.Rendering.Atmosphere
                 return;
             }
 
-            AtmosphereSample sample = profile.Evaluate(seaLevel - camera.transform.position.y);
+            AtmosphereSample sample = profile.Evaluate(seaLevel - camera.transform.position.y, CycleDaylight);
             Shader.SetGlobalVector(UpperWater, sample.UpperWater);
             Shader.SetGlobalVector(LowerWater, sample.LowerWater);
             Shader.SetGlobalVector(Ambient, sample.Ambient);

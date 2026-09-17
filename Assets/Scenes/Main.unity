@@ -2908,6 +2908,7 @@ GameObject:
   m_Component:
   - component: {fileID: 892112542}
   - component: {fileID: 892112541}
+  - component: {fileID: 892112543}
   m_Layer: 0
   m_Name: Dive light
   m_TagString: Untagged
@@ -2995,6 +2996,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1431336840}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &892112543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 892112540}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_CustomShadowLayers: 0
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
+  m_RenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_ShadowRenderingLayersMask:
+    serializedVersion: 0
+    m_Bits: 1
+  m_Version: 4
+  m_LightLayerMask: 1
+  m_ShadowLayerMask: 1
+  m_RenderingLayers: 1
+  m_ShadowRenderingLayers: 1
 --- !u!1 &930169175
 GameObject:
   m_ObjectHideFlags: 0
@@ -3873,6 +3903,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.Atmosphere.DepthAtmosphere
   profile: {fileID: 11400000, guid: dbdbec5a8fff24b358ff6225ea784772, type: 2}
+  dayNightCycle: {fileID: 1937854933}
   seaLevel: 0
 --- !u!114 &1431336848
 MonoBehaviour:
@@ -3887,8 +3918,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.CameraEffects.RetroPresentation
   material: {fileID: 2100000, guid: fc60b211368df49a0a0daf30a16548ff, type: 2}
-  pixelation: 1
-  colorQuantization: 1
+  pixelation: 0
+  colorQuantization: 0
   dithering: 1
 --- !u!114 &1431336849
 MonoBehaviour:
@@ -6274,6 +6305,113 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!1 &1937854932
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1937854934}
+  - component: {fileID: 1937854933}
+  m_Layer: 0
+  m_Name: Day and night
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1937854933
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937854932}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb6183212c00a4d4880f750ab75c45c7, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.Atmosphere.DayNightCycle
+  startHour: 12
+  advanceTime: 1
+  dayLengthMinutes: 20
+  daylightByHour:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 5
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 8
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 16
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 19
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 24
+      value: 0.3
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &1937854934
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937854932}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1949230827
 GameObject:
   m_ObjectHideFlags: 0
@@ -6517,3 +6655,4 @@ SceneRoots:
   - {fileID: 400395386}
   - {fileID: 836889366}
   - {fileID: 1949230830}
+  - {fileID: 1937854934}

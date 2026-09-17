@@ -9,7 +9,7 @@ float4 _DepthVisibilityCaustics, _DepthFogParameters, _DepthCloudMultiplier;
 
 float3 EnvironmentAmbient()
 {
-    return lerp(float3(.2, .4, .53), _DepthAmbient.rgb, _DepthAtmosphereActive);
+    return lerp(float3(.26, .48, .56), _DepthAmbient.rgb, _DepthAtmosphereActive);
 }
 
 float EnvironmentCaustics()
@@ -50,8 +50,8 @@ float3 ToOutputColor(float3 color)
 
 float3 WaterColor(float vertical)
 {
-    float3 lower = lerp(float3(.104, .384, .504), _DepthWaterLower.rgb, _DepthAtmosphereActive);
-    float3 upper = lerp(float3(.15, .53, .69), _DepthWaterUpper.rgb, _DepthAtmosphereActive);
+    float3 lower = lerp(float3(.125, .415, .55), _DepthWaterLower.rgb, _DepthAtmosphereActive);
+    float3 upper = lerp(float3(.175, .57, .74), _DepthWaterUpper.rgb, _DepthAtmosphereActive);
     return lerp(lower, upper, saturate(vertical / .3 + .5));
 }
 

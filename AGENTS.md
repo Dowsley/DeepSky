@@ -12,6 +12,9 @@ Open `Assets/Scenes/Main.unity` and enter Play mode for verification, following 
 
 Select `World` for the depth map and local preview controls. Edit its World Settings asset for seed, dimensions and terrain shape; content profiles control prefab distribution. Main contains the player, atmosphere and procedural-world configuration. World Settings, content profiles and prefabs are authoritative. Generated chunks and editor previews are transient, not saved level geometry. Do not add a second scene-rebuilding pipeline.
 
+Select `Day and night` for the time-of-day slider and cycle settings. See
+[day/night authoring](Docs/DayNight.md) for preview and Play-session behavior.
+
 Game content belongs directly under `Assets`, without a separate game or demo wrapper folder.
 
 ## Code
@@ -56,7 +59,9 @@ Images, textures and designated large assets use Git LFS according to `.gitattri
 
 ## Git and documentation
 
-Commit or push only when explicitly requested. Remote setup and history cleanup require separate explicit authorization. Do not rewrite history as an incidental step.
+The user authorizes a local commit whenever an explicitly assigned goal is completed. Otherwise, commit only when explicitly requested. Push, remote setup and history cleanup require separate explicit authorization. Do not rewrite history as an incidental step.
+
+Preserve the user's retro presentation settings during implementation and verification. Do not disable retro effects or change their settings unless explicitly requested.
 
 Follow the user's global writing conventions, including no em dashes.
 

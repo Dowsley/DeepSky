@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.Atmosphere.DepthAtmosphereProfile
   bands:
   - depth: 100
-    upperWater: {r: 0.15, g: 0.53, b: 0.69, a: 1}
-    lowerWater: {r: 0.104, g: 0.384, b: 0.504, a: 1}
-    ambient: {r: 0.2, g: 0.4, b: 0.53, a: 1}
+    upperWater: {r: 0.175, g: 0.57, b: 0.74, a: 1}
+    lowerWater: {r: 0.125, g: 0.415, b: 0.55, a: 1}
+    ambient: {r: 0.26, g: 0.48, b: 0.56, a: 1}
     visibility: 50
     caustics: 1
     shaftOpacityLimit: 1

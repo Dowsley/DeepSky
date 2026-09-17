@@ -26,8 +26,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorLevels: 32
+    - _ColorQuantization: 1
     - _DitherStrength: 0.65
-    - _PixelHeight: 360
+    - _Dithering: 1
+    - _PixelHeight: 320
+    - _Pixelation: 1
     - _Strength: 1
     m_Colors: []
   m_BuildTextureStacks: []

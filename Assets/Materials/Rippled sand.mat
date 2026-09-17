@@ -94,6 +94,6 @@ Material:
     - _OverlayEmissionColor: {r: 1, g: 1, b: 1, a: 1}
     - _RockColor: {r: 0.96, g: 0.992, b: 1.024, a: 1}
     - _RockHighlightGrid: {r: 46, g: 53, b: 18, a: 18}
-    - _SandColor: {r: 1.35, g: 1.4, b: 1.42, a: 1}
+    - _SandColor: {r: 1.62, g: 1.71, b: 1.69, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

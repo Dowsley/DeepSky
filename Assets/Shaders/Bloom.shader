@@ -5,7 +5,7 @@ Shader "DeepSky/Bloom"
         _Threshold ("Brightness threshold (display space)", Range(0,0.99)) = 0.1
         _Intensity ("Bloom intensity", Range(0,3)) = 1
         _BlurSpacing ("Blur spacing (screen-width pixels)", Range(0,8)) = 2
-        _EdgeShade ("Screen edge shading", Range(0,1)) = 0.5
+        _EdgeShade ("Screen edge shading", Range(0,1)) = 0.2
     }
     SubShader
     {
