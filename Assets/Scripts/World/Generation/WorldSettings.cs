@@ -15,7 +15,7 @@ namespace DeepSky.World.Generation
 
         [Header("Depth shelves")]
         [Tooltip("Depth below sea level for shallow central basins, middle regions and deep outer regions.")]
-        [SerializeField] private Vector3 shelfDepths = new Vector3(100f, 200f, 300f);
+        [SerializeField] private Vector3 shelfDepths = new Vector3(70f, 200f, 300f);
         [Tooltip("Outer edges of the middle (X) and shallow (Y) regions, as fractions of world width.")]
         [SerializeField] private Vector2 shelfRadii = new Vector2(0.2625f, 0.15f);
         [SerializeField, Range(0.3f, 0.48f)] private float exteriorRadius = 0.375f;
@@ -68,6 +68,8 @@ namespace DeepSky.World.Generation
         [Header("Starting area")]
         [Tooltip("Preferred normalized XZ. Generation searches nearby shallow basins for a suitable start.")]
         [SerializeField] private Vector2 spawnPosition = new Vector2(-0.08f, 0f);
+        [Tooltip("Maximum seabed depth at spawn in metres below sea level, including dune relief.")]
+        [SerializeField, Min(10f)] private float spawnMaximumDepth = 100f;
         [Tooltip("Radius within which the coarse basin floor must remain near level. Dunes are preserved.")]
         [SerializeField, Min(10f)] private float spawnBasinRadius = 38.4f;
         [SerializeField, Min(0.1f)] private float spawnBasinTolerance = 0.5f;
@@ -91,7 +93,7 @@ namespace DeepSky.World.Generation
             var relief = new TerrainRelief(seed, duneWavelength, duneHeight, duneOctaves, noisePersistence,
                 outcropWavelength, outcropHeight, outcropOctaves, outcropThreshold, outcropSoftCap, outcropCompression);
             return new WorldData(seed, chunksPerSide, chunkSize, subdivisions, shelfDepths, rockSlope,
-                spawnPosition, spawnClearingRadius, spawnBasinRadius, spawnBasinTolerance, spawnMaximumSlope,
+                spawnPosition, spawnClearingRadius, spawnMaximumDepth, spawnBasinRadius, spawnBasinTolerance, spawnMaximumSlope,
                 spawnOutcropRadius, spawnOutcropFade,
                 exteriorDepth + duneHeight * duneOctaves, layout, relief);
         }
@@ -121,6 +123,7 @@ namespace DeepSky.World.Generation
             outcropOctaves = Mathf.Clamp(outcropOctaves, 1, 6);
             noisePersistence = Mathf.Clamp01(noisePersistence);
             spawnBasinRadius = Mathf.Max(10f, spawnBasinRadius);
+            spawnMaximumDepth = Mathf.Max(10f, spawnMaximumDepth);
             spawnBasinTolerance = Mathf.Max(0.1f, spawnBasinTolerance);
             spawnOutcropRadius = Mathf.Max(0f, spawnOutcropRadius);
             spawnOutcropFade = Mathf.Max(0.1f, spawnOutcropFade);

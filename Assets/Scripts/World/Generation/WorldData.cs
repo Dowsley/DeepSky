@@ -36,6 +36,7 @@ namespace DeepSky.World.Generation
         /// <param name="rockSlope">Slope angles in degrees for the start and end of the rock blend.</param>
         /// <param name="preferredSpawn">Preferred XZ position as signed fractions of the world width.</param>
         /// <param name="clearingRadius">Radius in metres excluded from vegetation placement around spawn.</param>
+        /// <param name="spawnMaximumDepth">Maximum seabed depth at spawn in metres, including dunes.</param>
         /// <param name="spawnBasinRadius">Positive radius in metres of the required shallow basin.</param>
         /// <param name="spawnBasinTolerance">Maximum basin-height deviation in metres around a candidate.</param>
         /// <param name="spawnMaximumSlope">Maximum local floor slope at spawn, in degrees.</param>
@@ -46,7 +47,7 @@ namespace DeepSky.World.Generation
         /// <param name="relief">Immutable dune and outcrop sampler.</param>
         /// <exception cref="InvalidOperationException">No candidate satisfies the spawn constraints.</exception>
         internal WorldData(int seed, int chunksPerSide, float chunkSize, int subdivisions,
-            Vector3 depths, Vector2 rockSlope, Vector2 preferredSpawn, float clearingRadius,
+            Vector3 depths, Vector2 rockSlope, Vector2 preferredSpawn, float clearingRadius, float spawnMaximumDepth,
             float spawnBasinRadius, float spawnBasinTolerance, float spawnMaximumSlope, float spawnOutcropRadius, float spawnOutcropFade,
             float maximumDepth, BasinLayout layout, TerrainRelief relief)
         {
@@ -62,7 +63,7 @@ namespace DeepSky.World.Generation
             this.spawnOutcropFade = spawnOutcropFade;
             MaximumDepth = maximumDepth;
             ClearingRadius = clearingRadius;
-            Spawn = FindSpawn(preferredSpawn * Size, spawnBasinRadius, spawnBasinTolerance, spawnMaximumSlope);
+            Spawn = FindSpawn(preferredSpawn * Size, spawnMaximumDepth, spawnBasinRadius, spawnBasinTolerance, spawnMaximumSlope);
         }
 
         /// <summary>Checks the finite world domain, excluding its outer edges.</summary>
@@ -115,12 +116,13 @@ namespace DeepSky.World.Generation
 
         /// <summary>Searches a regular grid for the nearest eligible shallow-basin spawn.</summary>
         /// <param name="preferred">Preferred world XZ coordinates in metres.</param>
+        /// <param name="maximumDepth">Maximum actual seabed depth in metres below sea level.</param>
         /// <param name="radius">Positive basin radius in metres; also determines the search grid spacing.</param>
         /// <param name="tolerance">Allowed basin-height deviation in metres.</param>
         /// <param name="maximumSlopeDegrees">Maximum local dune-floor slope in degrees.</param>
         /// <returns>The eligible candidate closest to the preferred position.</returns>
         /// <exception cref="InvalidOperationException">No eligible candidate exists on the search grid.</exception>
-        private Vector2 FindSpawn(Vector2 preferred, float radius, float tolerance, float maximumSlopeDegrees)
+        private Vector2 FindSpawn(Vector2 preferred, float maximumDepth, float radius, float tolerance, float maximumSlopeDegrees)
         {
             float searchStep = radius * 0.25f;
             float maximumSlope = (float)Math.Tan(maximumSlopeDegrees * Math.PI / 180.0);
@@ -134,6 +136,7 @@ namespace DeepSky.World.Generation
                     var point = new Vector2(x * searchStep - Size * 0.5f, z * searchStep - Size * 0.5f);
                     float distance = (point - preferred).sqrMagnitude;
                     if (distance >= nearest || -layout.Height(point.x, point.y) > (depths.x + depths.y) * 0.5f + tolerance
+                        || -BasinFloor(point.x, point.y) > maximumDepth
                         || layout.Variation(point, radius) > tolerance)
                     {
                         continue;
@@ -153,7 +156,7 @@ namespace DeepSky.World.Generation
             }
 
             return float.IsPositiveInfinity(nearest)
-                ? throw new InvalidOperationException("No shallow basin satisfies the spawn constraints. Reduce the required basin radius, increase the height tolerance, enlarge the shallow region, or change the seed.")
+                ? throw new InvalidOperationException("No basin satisfies the spawn depth, flatness and slope constraints. Adjust the maximum spawn depth, basin radius/tolerance, shallow region, or seed.")
                 : best;
         }
 

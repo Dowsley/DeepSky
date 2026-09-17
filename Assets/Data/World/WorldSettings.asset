@@ -16,7 +16,7 @@ MonoBehaviour:
   chunksPerSide: 52
   chunkSize: 32
   subdivisions: 64
-  shelfDepths: {x: 100, y: 200, z: 300}
+  shelfDepths: {x: 70, y: 200, z: 300}
   shelfRadii: {x: 0.2625, y: 0.15}
   exteriorRadius: 0.375
   exteriorDepth: 400
@@ -42,6 +42,7 @@ MonoBehaviour:
   outcropCompression: 20
   rockSlope: {x: 22, y: 48}
   spawnPosition: {x: -0.08, y: 0}
+  spawnMaximumDepth: 100
   spawnBasinRadius: 38.4
   spawnBasinTolerance: 0.5
   spawnMaximumSlope: 20

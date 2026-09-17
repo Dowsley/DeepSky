@@ -27,8 +27,8 @@ Material:
     m_Floats:
     - _BlurSpacing: 2
     - _EdgeShade: 0.5
-    - _Intensity: 0.8
-    - _Threshold: 0.24
+    - _Intensity: 1
+    - _Threshold: 0.1
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -61,7 +61,8 @@ Material:
     - _AlphaEmission: 0
     - _CardSway: 0
     - _CausticStrength: 0.18
-    - _CausticTileSize: 7.2
+    - _CausticSpread: 0.8
+    - _CausticTileSize: 6.4
     - _Cutoff: 0.1
     - _Cutout: 0
     - _DepthOffset: 0
@@ -91,7 +92,7 @@ Material:
     - _CausticScroll: {r: 0.033840947, g: -0.027855152, b: 0, a: 0}
     - _FloorMapping: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _OverlayEmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RockColor: {r: 1.2, g: 1.24, b: 1.28, a: 1}
+    - _RockColor: {r: 0.96, g: 0.992, b: 1.024, a: 1}
     - _RockHighlightGrid: {r: 46, g: 53, b: 18, a: 18}
     - _SandColor: {r: 1.35, g: 1.4, b: 1.42, a: 1}
   m_BuildTextureStacks: []

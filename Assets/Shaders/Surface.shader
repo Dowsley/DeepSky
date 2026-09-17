@@ -9,6 +9,7 @@ Shader "DeepSky/Surface"
         _CausticsSecond ("Second caustic layer", 2D) = "black" {}
         _CausticTileSize ("Caustic tile size (metres)", Range(1,64)) = 12.8
         _CausticStrength ("Caustic strength", Range(0,1)) = 0
+        _CausticSpread ("Caustic light spread", Range(0,1)) = 0
         _CausticScroll ("Caustic scroll (UV per second XY)", Vector) = (0.03384095,-0.02785515,0,0)
         [Header(Surface)]
         _NormalMap ("Raw RGB terrain normals", 2D) = "bump" {}
@@ -80,7 +81,7 @@ Shader "DeepSky/Surface"
             CBUFFER_START(UnityPerMaterial)
                 float4 _BaseMap_ST, _BaseColor, _OverlayEmissionColor, _SandColor, _RockColor;
                 float4 _RockHighlightGrid, _FloorMapping, _CausticScroll;
-                float _CausticStrength, _WorldUV, _Cutoff, _Sway, _Fish, _Emission, _Glyph, _Floor;
+                float _CausticStrength, _CausticSpread, _WorldUV, _Cutoff, _Sway, _Fish, _Emission, _Glyph, _Floor;
                 float _WaveHeight, _WaveAmplitude, _CardSway, _UseAlphaAsHeight, _WaveFactor, _RootedSway;
                 float _TerrainBlend, _Cutout, _TextureAlpha, _AlphaEmission, _TopLight, _HideInInterior;
                 float _RockWorldScale, _TerrainNormalStrength, _CausticTileSize;
@@ -203,6 +204,10 @@ Shader "DeepSky/Surface"
                 float2 scroll = _Time.y * _CausticScroll.xy;
                 float3 c0 = ToDisplayColor(SAMPLE_TEXTURE2D(_Caustics,sampler_Caustics,causticUV + scroll).rgb);
                 float3 c1 = ToDisplayColor(SAMPLE_TEXTURE2D(_CausticsSecond,sampler_CausticsSecond,causticUV - scroll).rgb);
+                // Expand faint light around the ridges without adding light to black texels.
+                float causticPower = lerp(1,.5,_CausticSpread);
+                c0 = pow(saturate(c0),causticPower);
+                c1 = pow(saturate(c1),causticPower);
                 float3 caustic = (c0+c1)*_CausticStrength*EnvironmentCaustics()*(_Floor > .5 ? 1 : saturate(normal.y));
                 float torch = DiverTorch(i.world);
                 float3 chunkHighlight=SAMPLE_TEXTURE2D_LOD(_RockHighlightMap,sampler_RockHighlightMap,
