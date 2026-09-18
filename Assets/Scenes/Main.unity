@@ -3006,7 +3006,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.Runtime::UnityEngine.Rendering.Universal.UniversalAdditionalLightData
   m_UsePipelineSettings: 1
   m_AdditionalLightsShadowResolutionTier: 2
@@ -3709,7 +3709,7 @@ GameObject:
   - component: {fileID: 1431336848}
   - component: {fileID: 1431336849}
   m_Layer: 0
-  m_Name: Player Camera
+  m_Name: World
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3918,8 +3918,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.CameraEffects.RetroPresentation
   material: {fileID: 2100000, guid: fc60b211368df49a0a0daf30a16548ff, type: 2}
-  pixelation: 0
-  colorQuantization: 0
+  pixelation: 1
+  colorQuantization: 1
   dithering: 1
 --- !u!114 &1431336849
 MonoBehaviour:
@@ -6332,7 +6332,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: eb6183212c00a4d4880f750ab75c45c7, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: DeepSky::DeepSky.Rendering.Atmosphere.DayNightCycle
   startHour: 12
   advanceTime: 1
