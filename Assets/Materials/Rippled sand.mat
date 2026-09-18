@@ -49,19 +49,19 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RockMap:
-        m_Texture: {fileID: 2800000, guid: 19240dfe11c314371a02d8a29e472627, type: 3}
+        m_Texture: {fileID: 2800000, guid: a320d46c8e12b482d9a39f085dc34d76, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _RockNormal:
-        m_Texture: {fileID: 2800000, guid: 3e021b20345d74b5a8db18e7abbbdb53, type: 3}
+        m_Texture: {fileID: 2800000, guid: 4dc5bbaad31e14247bd5223d57ed6ffa, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _AlphaEmission: 0
     - _CardSway: 0
-    - _CausticStrength: 0.18
     - _CausticSpread: 0.8
+    - _CausticStrength: 0.18
     - _CausticTileSize: 6.4
     - _Cutoff: 0.1
     - _Cutout: 0
@@ -72,9 +72,10 @@ Material:
     - _Floor: 1
     - _Glyph: 0
     - _HideInInterior: 0
+    - _NearbyLightBoost: 2
     - _OverlaySheen: 0
     - _ProximityLightStrength: 0.9
-    - _RockWorldScale: 0.25
+    - _RockWorldScale: 0.3125
     - _RootedSway: 0
     - _SurfaceOverlay: 0
     - _Sway: 0
@@ -92,7 +93,7 @@ Material:
     - _CausticScroll: {r: 0.033840947, g: -0.027855152, b: 0, a: 0}
     - _FloorMapping: {r: 0.25, g: 0.25, b: 0, a: 0}
     - _OverlayEmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RockColor: {r: 0.96, g: 0.992, b: 1.024, a: 1}
+    - _RockColor: {r: 0.54, g: 0.558, b: 0.576, a: 1}
     - _RockHighlightGrid: {r: 46, g: 53, b: 18, a: 18}
     - _SandColor: {r: 1.62, g: 1.71, b: 1.69, a: 1}
   m_BuildTextureStacks: []
