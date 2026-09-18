@@ -24,13 +24,13 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 613a579b7772b49d78e03842864e8596, type: 3}
+        m_Texture: {fileID: 2800000, guid: f9e1846d55739474aabf3192e97e3201, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CloudConcentration: 0.7
-    - _CoreOpacity: 0.65
+    - _CloudConcentration: 0
+    - _CoreOpacity: 1
     - _DepthTint: 1
     - _DistanceFade: 1
     - _FarFadeEnd: 40
@@ -40,15 +40,13 @@ Material:
     - _NearFadeStart: 5
     - _OpacityContrast: 0
     - _OpacityGain: 1
-    - _OpacitySteps: 0
-    - _PixelGrid: 0
     - _PoreFrequency: 256
     - _Porosity: 0
-    - _TextureColorStrength: 0.25
+    - _TextureColorStrength: 1
     - _TextureRepeat: 1
     - _VolumeFadeEnd: 40
     - _VolumeFadeStart: 35
     m_Colors:
-    - _BaseColor: {r: 0.7, g: 0.9, b: 1.03, a: 0.55}
+    - _BaseColor: {r: 0.7, g: 0.9, b: 1.03, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
